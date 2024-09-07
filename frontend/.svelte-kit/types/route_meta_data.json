@@ -1,0 +1,47 @@
+{
+	"/": [
+		"src/routes/+page.server.js",
+		"src/routes/+layout.server.js",
+		"src/routes/+layout.server.js"
+	],
+	"/article/[slug]": [
+		"src/routes/article/[slug]/+page.server.js",
+		"src/routes/+layout.server.js"
+	],
+	"/editor": [
+		"src/routes/editor/+page.server.js",
+		"src/routes/+layout.server.js"
+	],
+	"/editor/[slug]": [
+		"src/routes/editor/[slug]/+page.server.js",
+		"src/routes/+layout.server.js"
+	],
+	"/login": [
+		"src/routes/login/+page.server.js",
+		"src/routes/+layout.server.js"
+	],
+	"/profile": [
+		"src/routes/profile/+page.js",
+		"src/routes/+layout.server.js"
+	],
+	"/profile/@[user]": [
+		"src/routes/profile/@[user]/+page.server.js",
+		"src/routes/profile/@[user]/+layout.server.js",
+		"src/routes/+layout.server.js",
+		"src/routes/profile/@[user]/+layout.server.js",
+		"src/routes/+layout.server.js"
+	],
+	"/profile/@[user]/favorites": [
+		"src/routes/profile/@[user]/favorites/+page.server.js",
+		"src/routes/profile/@[user]/+layout.server.js",
+		"src/routes/+layout.server.js"
+	],
+	"/register": [
+		"src/routes/register/+page.server.js",
+		"src/routes/+layout.server.js"
+	],
+	"/settings": [
+		"src/routes/settings/+page.server.js",
+		"src/routes/+layout.server.js"
+	]
+}
