@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { placeholder } from '$lib/constants.js';
 
-	export let user;
+	// export let user;
 </script>
 
 <form use:enhance method="POST" action="?/createComment" class="card comment-form">
@@ -11,7 +11,7 @@
 	</div>
 
 	<div class="card-footer">
-		<img src={user.image || placeholder} class="comment-author-img" alt={user.username} />
+		<!-- <img src={user.image || placeholder} class="comment-author-img" alt={user.username} /> -->
 		<button class="btn btn-sm btn-primary" type="submit">Post Comment</button>
 	</div>
 </form>

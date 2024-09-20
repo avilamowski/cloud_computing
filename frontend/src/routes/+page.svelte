@@ -1,16 +1,31 @@
 <script>
+	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import ArticleList from '$lib/ArticleList/index.svelte';
 	import Pagination from './Pagination.svelte';
+	import {Carta, MarkdownEditor} from 'carta-md';
+	import 'carta-md/default.css';
 
-	/** @type {import('./$types').PageData} */
-	export let data;
-	console.log(data, "pagedata");
+	const carta = new Carta({
+		
+	});
+
+	let showModal = false;
+	let tag, tab, p, page_link_base;
+
 
 	$: p = +($page.url.searchParams.get('page') ?? '1');
 	$: tag = $page.url.searchParams.get('tag');
 	$: tab = $page.url.searchParams.get('tab') ?? 'all';
 	$: page_link_base = tag ? `tag=${tag}` : `tab=${tab}`;
+
+	function toggleModal() {
+		showModal = !showModal;
+	}
+
+	/** @type {import('./$types').PageData} */
+	export let data;
+
 </script>
 
 <svelte:head>
@@ -30,41 +45,48 @@
 	<div class="container page">
 		<div class="row">
 			<div class="col-md-9">
-				<div class="feed-toggle">
-					<ul class="nav nav-pills outline-active">
-						<li class="nav-item">
-							<a href="/?tab=all" class="nav-link" class:active={tab === 'all' && !tag}>
-								Global Feed
-							</a>
-						</li>
-
-						{#if data.user}
-							<li class="nav-item">
-								<a href="/?tab=feed" class="nav-link" class:active={tab === 'feed'}>Your Feed</a>
-							</li>
-						{:else}
-							<li class="nav-item">
-								<a href="/login" class="nav-link">Sign in to see your Feed</a>
-							</li>
-						{/if}
-
-						{#if tag}
-							<li class="nav-item">
-								<a href="/?tag={tag}" class="nav-link active">
-									<i class="ion-pound" />
-									{tag}
-								</a>
-							</li>
-						{/if}
-					</ul>
-				</div>
-
 				<ArticleList publications={data.publications} />
 				<Pagination pages={data.pages} {p} href={(p) => `/?${page_link_base}&page=${p}`} />
 			</div>
 
 			<div class="col-md-3">
+				<button class="btn btn-lg btn-primary btn-block" on:click={toggleModal}>
+					Create Publication
+				</button>
 				<div class="sidebar">
+					<!-- Modal -->
+					{#if showModal}
+						<div class="modal" on:click={toggleModal}>
+							<div class="modal-content" on:click|stopPropagation>
+								<span class="close" on:click={toggleModal}>&times;</span>
+								<h2>Create New Publication</h2>
+								<form use:enhance method="POST" action="?/createPublication">
+									<div>
+										<label for="username">Username</label>
+										<input type="text" id="username" name="username" class="form-control" required />
+									</div>
+									<div>
+										<label for="email">Email</label>
+										<input type="email" id="email" name="email" class="form-control" required />
+									</div>
+									<div>
+										<label for="title">Title</label>
+										<input type="text" id="title" name="title" class="form-control" required />
+									</div>
+									<div>
+										<label for="content">Content</label>
+										<MarkdownEditor {carta} class="markdown-editor-container"/>
+									</div>
+									<div class="form-group">
+										<button class="btn btn-primary" type="submit">Submit</button>
+										<button class="btn btn-secondary" type="button" on:click={toggleModal}>Cancel</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					{/if}
+
+					<!-- Popular Tags -->
 					<p>Popular Tags</p>
 					<div class="tag-list">
 						{#each data.tags as tag}
@@ -76,3 +98,54 @@
 		</div>
 	</div>
 </div>
+
+<style>
+	.modal {
+		display: block;
+		position: fixed;
+		z-index: 1;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		overflow: auto;
+		background-color: rgba(0, 0, 0, 0.4);
+	}
+
+	.modal-content {
+		background-color: #fefefe;
+		margin: 15% auto;
+		padding: 20px;
+		border: 1px solid #888;
+		width: 80%;
+	}
+
+	.close {
+		color: #aaa;
+		float: right;
+		font-size: 28px;
+		font-weight: bold;
+	}
+
+	.close:hover,
+	.close:focus {
+		color: black;
+		text-decoration: none;
+		cursor: pointer;
+	}
+
+	button {
+		margin: 10px 0; /* Add margin to all buttons */
+	}
+
+	.btn-block {
+		width: 100%;
+		margin-bottom: 20px;
+	}
+
+	:global(.carta-font-code) {
+		font-family: '...', monospace;
+		font-size: 1.1rem;
+	}
+	
+</style>

@@ -5,15 +5,49 @@ import sanitizeHtml from 'sanitize-html';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals, params }) {
-	const [{ article }, { comments }] = await Promise.all([
-		api.get(`articles/${params.slug}`, locals.user?.token),
-		api.get(`articles/${params.slug}/comments`, locals.user?.token)
-	]);
+	// const [{ article }, { comments }] = await Promise.all([
+	// 	api.get(`articles/${params.slug}`, locals.user?.token),
+	// 	api.get(`articles/${params.slug}/comments`, locals.user?.token)
+	// ]);
 
-	const dirty = marked(article.body);
-	article.body = sanitizeHtml(dirty);
+	// const dirty = marked(article.body);
+	// article.body = sanitizeHtml(dirty);
+	const publication = {
+			
+				publication_id: 1,
+				title: "Article 1",
+				content: "Description of my first article",
+				user_id: "Content of my first article",
+				created_at: new Date(),
+			
+	}
 
-	return { article, comments };
+	const comments = [
+		{
+			comment_id: 1,
+			content: "Comment 1",
+			user_id: "User 1",
+			publication_id: 1,
+			created_at: new Date(),
+		},
+		{
+			comment_id: 2,
+			content: "Comment 2",
+			user_id: "User 2",
+			publication_id: 1,
+			created_at: new Date(),
+		},
+		{
+			comment_id: 3,
+			content: "Comment 3",
+			user_id: "User 3",
+			publication_id: 1,
+			created_at: new Date(),
+		}
+	]
+    
+
+	return { publication, comments };
 }
 
 /** @type {import('./$types').Actions} */

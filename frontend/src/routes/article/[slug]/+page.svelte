@@ -7,14 +7,14 @@
 </script>
 
 <svelte:head>
-	<title>{data.article.title}</title>
+	<title>{data.publication.title}</title>
 </svelte:head>
 
 <div class="article-page">
 	<div class="banner">
 		<div class="container">
-			<h1>{data.article.title}</h1>
-			<ArticleMeta article={data.article} user={data.user} />
+			<h1>{data.publication.title}</h1>
+			<!-- <ArticleMeta article={data.article} user={data.user} /> -->
 		</div>
 	</div>
 
@@ -22,14 +22,14 @@
 		<div class="row article-content">
 			<div class="col-xs-12">
 				<div>
-					{@html data.article.body}
+					{@html data.publication.content}
 				</div>
 
-				<ul class="tag-list">
+				<!-- <ul class="tag-list">
 					{#each data.article.tagList as tag}
 						<li class="tag-default tag-pill tag-outline">{tag}</li>
 					{/each}
-				</ul>
+				</ul> -->
 			</div>
 		</div>
 
@@ -38,7 +38,7 @@
 		<div class="article-actions" />
 
 		<div class="row">
-			<CommentContainer comments={data.comments} user={data.user} errors={[]} />
+			<CommentContainer comments={data.comments} errors={[]} />
 		</div>
 	</div>
 </div>

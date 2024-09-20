@@ -3,11 +3,11 @@
 	import Comment from './Comment.svelte';
 
 	export let comments;
-	export let user;
+	// export let user;
 </script>
 
 <div class="col-xs-12 col-md-8 offset-md-2">
-	{#if user}
+	<!-- {#if user}
 		<div>
 			<CommentInput {user} />
 		</div>
@@ -18,9 +18,12 @@
 			<a href="/register">sign up</a>
 			to add comments on this article.
 		</p>
-	{/if}
+	{/if} -->
 
-	{#each comments as comment (comment.id)}
-		<Comment {comment} {user} />
+	{#each comments as comment (comment.comment_id)}
+		<Comment {comment} />
 	{/each}
+	<div>
+		<CommentInput />
+	</div>
 </div>
