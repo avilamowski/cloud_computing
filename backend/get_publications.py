@@ -9,11 +9,11 @@ def lambda_handler(event, context):
         search_term = event.get('queryStringParameters', {}).get('search_term')
         page = event.get('queryStringParameters', {}).get('page', 1)
 
-        # if not page.isdigit() or int(page) < 1:
-        #     return {
-        #         'statusCode': 400,
-        #         'body': json.dumps({'error': 'invalid page'})
-        #     }
+        if not str(page).isdigit() or int(page) < 1:
+            return {
+                'statusCode': 400,
+                'body': json.dumps({'error': 'invalid page'})
+            }
 
         publication_query = session.query(Publication)
         if search_term:

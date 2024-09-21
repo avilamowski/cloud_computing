@@ -3,12 +3,17 @@ from models import Publication, User
 import json
 import uuid
 import datetime
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     session = get_session()
+    logger.info("Hello world")
 
     try:
-        data = json.loads(event['body'])
+        data = event['body']
 
         title = data.get('title')
         content = data.get('content')
@@ -21,14 +26,23 @@ def lambda_handler(event, context):
                 'body': json.dumps({'error': 'title, content and username are required'})
             }
 
-        user = session.query(User).filter_by(username=username).first()
+        user = session.query(User).filter_by(username=username).filter_by(email=email).first()
         if not user:
-            user = User(
-                user_id=str(uuid.uuid4()),
-                username=username,
-                email=email
-            )
-            session.add(user)
+            try:
+                user = User(
+                    user_id=str(uuid.uuid4()),
+                    username=username,
+                    email=email
+                )
+                session.add(user)
+                session.commit()
+            except Exception as e:
+                return {
+                    'statusCode': 500,
+                    'body': 'There was already a user with the same username or email'
+                }
+
+        logger.info(f'User: {user.user_id}')
 
         new_publication = Publication(
             publication_id=str(uuid.uuid4()), 
@@ -38,8 +52,11 @@ def lambda_handler(event, context):
             created_at=datetime.datetime.now()
         )
 
+        logger.info(f'Publication: {new_publication.publication_id}')
         session.add(new_publication)
         session.commit()
+
+        publication_id = str(new_publication.publication_id)
 
         session.close()
 
@@ -47,7 +64,7 @@ def lambda_handler(event, context):
             'statusCode': 201,
             'body': json.dumps({
                 'message': 'Publication created successfully',
-                'publication_id': new_publication.publication_id
+                'publication_id': publication_id
             })
         }
 
