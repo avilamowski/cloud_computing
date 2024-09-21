@@ -1,20 +1,26 @@
 <script>
-	import { enhance } from '$app/forms';
+	import { publicationStore } from "../../routes/publicationStore.js";
 
-	export let article;
+
+
+	export let publication;
 	export let user;
+
+
+	// when clicking on href of the publication, send the information to the next page
+
 </script>
 
 <div class="article-preview">
 	<div class="article-meta">
-		<a href="/profile/@{article.author}">
-			<!-- <img src={article.author.image} alt={article.author.username} /> -->
-		</a>
+		<!-- <a href="/profile/@{publication.author}">
+			<img src={article.author.image} alt={article.author.username} /> -->
+		<!-- </a> -->
 
-		<div class="info">
-			<a class="author" href="/profile/@{article.user}">{article.author}</a>
-			<span class="date">{new Date(article.date).toDateString()}</span>
-		</div>
+		<!-- <div class="info">
+			<a class="author" href="/profile/@{publication.user}">{publication.author}</a>
+			<span class="date">{new Date(publication.created_at).toDateString()}</span>
+		</div> -->
 
 		<!-- {#if user}
 			<form
@@ -49,14 +55,21 @@
 		{/if} -->
 	</div>
 
-	<a href="/article/{article.publication_id}" class="preview-link">
-		<h1>{article.title}</h1>
-		<p>{article.content}</p>
+	<a href="/article/{publication?.publication_id}" class="preview-link" on:click={publicationStore.set({
+		publication_id: publication?.publication_id,
+		title: publication?.title,
+		content: publication?.content,
+		created_at: publication?.created_at,
+		user: publication?.user,
+		user_id: publication?.user_id,
+	})}>
+		<h1>{publication?.title}</h1>
+		<p>{publication?.content}</p>
 		<span>Read more...</span>
-		<ul class="tag-list">
+		<!-- <ul class="tag-list"> -->
 			<!-- {#each article.tagList as tag}
 				<li class="tag-default tag-pill tag-outline"><a href="/?tag={tag}">{tag}</a></li>
 			{/each} -->
-		</ul>
+		<!-- </ul> -->
 	</a>
 </div>

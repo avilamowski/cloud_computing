@@ -12,15 +12,6 @@ export async function load({ locals, params }) {
 
 	// const dirty = marked(article.body);
 	// article.body = sanitizeHtml(dirty);
-	const publication = {
-			
-				publication_id: 1,
-				title: "Article 1",
-				content: "Description of my first article",
-				user_id: "Content of my first article",
-				created_at: new Date(),
-			
-	}
 
 	const comments = [
 		{
@@ -47,7 +38,7 @@ export async function load({ locals, params }) {
 	]
     
 
-	return { publication, comments };
+	return { comments };
 }
 
 /** @type {import('./$types').Actions} */

@@ -10,8 +10,8 @@
 	<div class="article-preview">No publications are here... yet.</div>
 {:else}
 	<div>
-		{#each publications as article (article.publication_id)}
-			<ArticlePreview {article} user={$page.data.user} />
+		{#each publications as publication (publication.publication_id)}
+			<ArticlePreview {publication} user={$page.data.user} />
 		{/each}
 	</div>
 {/if}
