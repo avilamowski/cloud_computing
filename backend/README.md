@@ -1,16 +1,14 @@
 # Commands 
 
-## Install dependencies
-`python3 -m venv .venv`
+Test locally:
+```bash
+docker compose up --watch
 
-## Activate virtual environment
-`source .venv/bin/activate` 
+Build image:
+```docker build -t get_publications .```
 
-## Install dependencies
-`pip install -r requirements.txt` 
+Tag image:
+```docker tag get_publications:latest [aws_account_id].dkr.ecr.us-east-1.amazonaws.com/get_publications:latest```
 
-## Run the server (production)
-`gunicorn -w 4 -b 0.0.0.0:[port] 'server:app`
-
-## Run the server (development)
-`python server.py`
+Push image:
+```docker push [aws_account_id].dkr.ecr.us-east-1.amazonaws.com/get_publications:latest```

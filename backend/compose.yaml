@@ -1,0 +1,18 @@
+services:
+  local-lambda:
+    build: .
+    develop: 
+      watch:
+        - action: rebuild
+          path: .
+          target: /var/task
+    environment:
+      - AWS_LAMBDA_FUNCTION_NAME=get_publications
+      - DB_HOST=host.docker.internal
+      - DB_NAME=tp-cloud
+      - DB_USER=david
+      - DB_PASSWORD=admin
+    ports:
+      - "9000:8080"  
+    extra_hosts:
+        - "host.docker.internal:host-gateway"
