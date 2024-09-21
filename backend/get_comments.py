@@ -9,6 +9,7 @@ logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     session = get_session()
+    logger.info("Event: %s", event)
 
     try:
         publication_id = event.get('pathParameters').get('publication_id')
@@ -26,7 +27,6 @@ def lambda_handler(event, context):
                 'body': json.dumps({'error': 'invalid page'})
             }
         
-        # comments = session.query(Comment).filter_by(publication_id=publication_id).limit(10).offset((int(page) - 1) * 10).all()
         comments = session.query(Comment).filter_by(publication_id=publication_id).limit(10).offset((int(page) - 1) * 10).options(joinedload(Comment.user)).all()
 
         result = [ comment.to_dict() for comment in comments ]
