@@ -3,9 +3,14 @@ from models import Comment
 import json
 import uuid
 import datetime
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     session = get_session()
+    logger.info("Event: %s", event)
 
     try:
         data = json.loads(event['body'])
@@ -31,13 +36,16 @@ def lambda_handler(event, context):
         session.add(new_comment)
         session.commit()
 
+        new_comment_id = str(new_comment.comment_id)
         session.close()
+
+        logger.info(f'Comment: {new_comment_id}')
 
         return {
             'statusCode': 201,
             'body': json.dumps({
                 'message': 'Comment created successfully',
-                'comment_id': new_comment.comment_id
+                'comment_id': new_comment_id
             })
         }
 

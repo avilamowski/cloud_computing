@@ -22,16 +22,7 @@ def lambda_handler(event, context):
 
         publications = publication_query.limit(10).offset((int(page) - 1) * 10).all()
 
-        result = []
-        for pub in publications:
-            result.append({
-                'publication_id': str(pub.publication_id),
-                'title': pub.title,
-                'content': pub.content,
-                'user_id': str(pub.user_id),
-                'created_at': pub.created_at.isoformat()
-            })
-
+        result = [ pub.to_dict() for pub in publications ]
         session.close()
 
         return {
