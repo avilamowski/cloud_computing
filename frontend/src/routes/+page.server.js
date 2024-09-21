@@ -52,9 +52,9 @@ export const actions = {
 				},
 				// locals.user.token			
 			);
-			redirect(200, `/article/${response.publication_id}`);
+			return {success: "Publication was created successfully"};
 		} catch (e) {
-			console.log(e);
+			return {error: "Username or email are in use"}
 		}
 	},
 }

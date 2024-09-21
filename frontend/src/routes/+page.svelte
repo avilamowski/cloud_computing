@@ -3,33 +3,34 @@
 	import { page } from '$app/stores';
 	import ArticleList from '$lib/ArticleList/index.svelte';
 	import Pagination from './Pagination.svelte';
-	import {Carta, MarkdownEditor} from 'carta-md';
+	import { Carta, MarkdownEditor } from 'carta-md';
 	import 'carta-md/default.css';
+	import Toast from './Toast.svelte';
 
 	const carta = new Carta({});
-
 	let showModal = false;
 	let tag, tab, p, page_link_base;
-
+	let toastVisible = false;  // State for toast visibility
+	let toastMessage = '';     // Message to display in the toast
 
 	$: p = +($page.url.searchParams.get('page') ?? '1');
 	$: tag = $page.url.searchParams.get('tag');
 	$: tab = $page.url.searchParams.get('tab') ?? 'all';
-	$: page_link_base = tag ? `tag=${tag}` : `tab=${tab}`;
+	$: page_link_base = `tag=${tag}&tab=${tab}`;
 
 	function toggleModal() {
 		showModal = !showModal;
 	}
 
-	function submitForm(event) {
-		if (response.ok) {
-				toggleModal();
-				form.reset();
-		}
-	}
-
 	/** @type {import('./$types').PageData} */
 	export let data;
+	export let form;
+
+	$: if (form?.success) {
+		toastMessage = 'Publication created successfully!'; // Set the toast message
+		toastVisible = true; // Show the toast
+		toggleModal();
+	}
 
 </script>
 
@@ -63,9 +64,12 @@
 					{#if showModal}
 						<div class="modal" on:click={toggleModal}>
 							<div class="modal-content" on:click|stopPropagation>
+								{#if form?.error}
+									<div class="alert alert-danger">{form.error}</div>
+								{/if}
 								<span class="close" on:click={toggleModal}>&times;</span>
 								<h2>Create New Publication</h2>
-								<form use:enhance method="POST" action="?/createPublication" on:submit={submitForm}>
+								<form use:enhance method="POST" action="?/createPublication">
 									<div>
 										<label for="username">Username</label>
 										<input type="text" id="username" name="username" class="form-control" required />
@@ -80,7 +84,7 @@
 									</div>
 									<div>
 										<label for="content">Content</label>
-										<MarkdownEditor {carta} textarea={{'name': "content", "required": true}}/>
+										<MarkdownEditor {carta} textarea={{ 'name': "content", "required": true }} />
 									</div>
 									<div class="form-group">
 										<button class="btn btn-primary" type="submit">Submit</button>
@@ -102,6 +106,9 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Toast Notification -->
+	<Toast message={toastMessage} visible={toastVisible} />
 </div>
 
 <style>
@@ -140,7 +147,7 @@
 	}
 
 	button {
-		margin: 10px 0; /* Add margin to all buttons */
+		margin: 10px 0;
 	}
 
 	.btn-block {
@@ -152,5 +159,4 @@
 		font-family: '...', monospace;
 		font-size: 1.1rem;
 	}
-	
 </style>
