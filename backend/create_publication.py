@@ -10,11 +10,10 @@ logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     session = get_session()
-    logger.info("Hello world")
+    logger.info(event)
 
     try:
-        data = event['body']
-
+        data = json.loads(event.get('body'))
         title = data.get('title')
         content = data.get('content')
         username = data.get('username') # TODO: Only get user id in future implementation
@@ -37,6 +36,7 @@ def lambda_handler(event, context):
                 session.add(user)
                 session.commit()
             except Exception as e:
+                logger.error("Error creating user: there was already a user with the same username or email")
                 return {
                     'statusCode': 500,
                     'body': 'There was already a user with the same username or email'
@@ -70,6 +70,7 @@ def lambda_handler(event, context):
 
     except Exception as e:
         session.close()
+        logger.error(e)
         return {
             'statusCode': 500,
             'body': json.dumps({'error': str(e)})

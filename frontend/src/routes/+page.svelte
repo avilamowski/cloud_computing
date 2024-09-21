@@ -6,9 +6,7 @@
 	import {Carta, MarkdownEditor} from 'carta-md';
 	import 'carta-md/default.css';
 
-	const carta = new Carta({
-		
-	});
+	const carta = new Carta({});
 
 	let showModal = false;
 	let tag, tab, p, page_link_base;
@@ -21,6 +19,13 @@
 
 	function toggleModal() {
 		showModal = !showModal;
+	}
+
+	function submitForm(event) {
+		if (response.ok) {
+				toggleModal();
+				form.reset();
+		}
 	}
 
 	/** @type {import('./$types').PageData} */
@@ -60,7 +65,7 @@
 							<div class="modal-content" on:click|stopPropagation>
 								<span class="close" on:click={toggleModal}>&times;</span>
 								<h2>Create New Publication</h2>
-								<form use:enhance method="POST" action="?/createPublication">
+								<form use:enhance method="POST" action="?/createPublication" on:submit={submitForm}>
 									<div>
 										<label for="username">Username</label>
 										<input type="text" id="username" name="username" class="form-control" required />
@@ -75,7 +80,7 @@
 									</div>
 									<div>
 										<label for="content">Content</label>
-										<MarkdownEditor {carta} class="markdown-editor-container"/>
+										<MarkdownEditor {carta} textarea={{'name': "content", "required": true}}/>
 									</div>
 									<div class="form-group">
 										<button class="btn btn-primary" type="submit">Submit</button>

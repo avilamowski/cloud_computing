@@ -1,5 +1,6 @@
 import * as api from '$lib/api';
 import { page_size } from '$lib/constants';
+import { redirect } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals, url }) {
@@ -11,17 +12,16 @@ export async function load({ locals, url }) {
 
 	const q = new URLSearchParams();
 
-	q.set('limit', page_size);
-	q.set('offset', (page - 1) * page_size);
-	if (tag) q.set('tag', tag);
+	q.set('page', 1);
+	// q.set('offset', (page - 1) * page_size);
+	// if (tag) q.set('tag', tag);
 
 	// const [{ articles, articlesCount }] = await Promise.all([
 		// api.get(`${endpoint}?${q}`, locals.user?.token),
 		// api.get('tags')
 	// ]);
 
-	const publications = await api.get(`publications`);
-	console.log(publications);
+	const publications = await api.get(`get_publications?${q}`);
 	const tags = [];
 
 	return {
@@ -29,4 +29,32 @@ export async function load({ locals, url }) {
 		pages: Math.ceil(publications.length / page_size),
 		tags
 	};
+}
+
+/** @type {import('./$types').Actions} */
+export const actions = {
+	createPublication: async ({ locals, params, request }) => {
+		console.log('createPublication');
+		// if (!locals.user) error(401);
+
+		const data = await request.formData();
+		console.log("data: ", data)
+
+		try {
+			const response = await api.post(`create_publication`,
+				{
+						title: data.get('title'),
+						content: data.get('content'),
+						username: data.get('username'),
+						email: data.get('email'),
+						// tagList: data.get('tagList').split(' ')
+
+				},
+				// locals.user.token			
+			);
+			redirect(200, `/article/${response.publication_id}`);
+		} catch (e) {
+			console.log(e);
+		}
+	},
 }
