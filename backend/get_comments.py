@@ -12,7 +12,8 @@ def lambda_handler(event, context):
     logger.info("Event: %s", event)
 
     try:
-        publication_id = event.get('pathParameters').get('publication_id')
+        # publication_id = event.get('pathParameters').get('publication_id')
+        publication_id = event.get('queryStringParameters', {}).get('publication_id')
         page = event.get('queryStringParameters', {}).get('page', 1)
 
         if not publication_id:
