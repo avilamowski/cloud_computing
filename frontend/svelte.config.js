@@ -6,6 +6,9 @@ import adapter from '@sveltejs/adapter-node';
 export default {
 	kit: {
 		// adapter: adapter({ runtime: 'edge' })
-		adapter: adapter()
+		adapter: adapter(),
+		csrf: {
+		  checkOrigin: false,
+		}
 	}
 };

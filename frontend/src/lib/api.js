@@ -1,8 +1,8 @@
 import { error } from '@sveltejs/kit';
-
+import { BASE_PATH } from '$env/static/private';
 // const base = 'https://api.realworld.io/api';
 // const base = 'https://0lhje3xjl2.execute-api.us-east-1.amazonaws.com/default/';
-const base = process.env.API_URL;
+const base = BASE_PATH;
 
 async function send({ method, path, data, token }) {
 	const opts = { method, headers: {} };

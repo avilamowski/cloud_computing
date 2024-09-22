@@ -13,6 +13,8 @@ RUN npm install --only=production
 # Copy the built application files into the container
 COPY build/ .
 
+COPY prod.env ./.env
+
 # Expose the port your app runs on
 EXPOSE 3000
 
