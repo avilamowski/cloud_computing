@@ -10,7 +10,7 @@
 </script>
 
 <svelte:head>
-	<title>Settings • Conduit</title>
+	<title>Settings • Soul Pupils</title>
 </svelte:head>
 
 <div class="settings-page">

@@ -22,6 +22,7 @@ def lambda_handler(event, context):
             }
 
         publication_query = session.query(Publication)
+        publications_count = publication_query.count()
         if search_term:
             publication_query = \
                 publication_query.filter(Publication.title.ilike(f'%{search_term}%') | Publication.content.ilike(f'%{search_term}%'))
@@ -30,7 +31,12 @@ def lambda_handler(event, context):
         # get publications and user data
         publications = publication_query.limit(10).offset((int(page) - 1) * 10).options(joinedload(Publication.user)).all()
 
-        result = [ pub.to_dict() for pub in publications ]
+        result = {
+            'publications': [ pub.to_dict() for pub in publications ],
+            'page': int(page),
+            'total_pages': max(0, int((publications_count - 1) / 10) + 1),
+            'total_publications': publications_count
+        }
         session.close()
 
         return {

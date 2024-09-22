@@ -3,7 +3,6 @@
 	import ArticlePreview from './ArticlePreview.svelte';
 
 	export let publications;
-	console.log(publications, "hola");
 </script>
 
 {#if publications.length === 0}

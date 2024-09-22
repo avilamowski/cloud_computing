@@ -14,9 +14,9 @@
 	let toastMessage = '';     // Message to display in the toast
 
 	$: p = +($page.url.searchParams.get('page') ?? '1');
-	$: tag = $page.url.searchParams.get('tag');
-	$: tab = $page.url.searchParams.get('tab') ?? 'all';
-	$: page_link_base = `tag=${tag}&tab=${tab}`;
+	// $: tag = $page.url.searchParams.get('tag');
+	// $: tab = $page.url.searchParams.get('tab') ?? 'all';
+	// $: page_link_base = `tag=${tag}&tab=${tab}`;
 
 	function toggleModal() {
 		showModal = !showModal;
@@ -35,15 +35,15 @@
 </script>
 
 <svelte:head>
-	<title>Conduit</title>
+	<title>Soul Pupils</title>
 </svelte:head>
 
 <div class="home-page">
 	{#if !data.user}
 		<div class="banner">
 			<div class="container">
-				<h1 class="logo-font">conduit</h1>
-				<p>A place to share your knowledge.</p>
+				<h1 class="logo-font">Soul pupils</h1>
+				<p>A place to discuss what matters</p>
 			</div>
 		</div>
 	{/if}
@@ -52,22 +52,22 @@
 		<div class="row">
 			<div class="col-md-9">
 				<ArticleList publications={data.publications} />
-				<Pagination pages={data.pages} {p} href={(p) => `/?${page_link_base}&page=${p}`} />
+				<Pagination pages={data.pages} {p} href={(p) => `/?page=${p}`} />
 			</div>
 
 			<div class="col-md-3">
-				<button class="btn btn-lg btn-primary btn-block" on:click={toggleModal}>
+				<button class="btn btn-lg btn-primary btn-block" on:click={toggleModal} type="button">
 					Create Publication
 				</button>
 				<div class="sidebar">
 					<!-- Modal -->
 					{#if showModal}
-						<div class="modal" on:click={toggleModal}>
-							<div class="modal-content" on:click|stopPropagation>
+						<div class="modal" role="dialog">
+							<div class="modal-content">
 								{#if form?.error}
 									<div class="alert alert-danger">{form.error}</div>
 								{/if}
-								<span class="close" on:click={toggleModal}>&times;</span>
+								<span class="close" on:click={toggleModal} role="button" tabindex="0" aria-label="Close" aria-hidden="true" aria-controls="modal"> &times;</span>
 								<h2>Create New Publication</h2>
 								<form use:enhance method="POST" action="?/createPublication">
 									<div>

@@ -12,7 +12,7 @@ export async function load({ locals, url }) {
 
 	const q = new URLSearchParams();
 
-	q.set('page', 1);
+	q.set('page', page);
 	// q.set('offset', (page - 1) * page_size);
 	// if (tag) q.set('tag', tag);
 
@@ -21,12 +21,13 @@ export async function load({ locals, url }) {
 		// api.get('tags')
 	// ]);
 
-	const publications = await api.get(`get_publications?${q}`);
+	const {publications, total_pages, total_publications } = await api.get(`get_publications?${q}`);
 	const tags = [];
+	console.log(total_publications, total_pages)
 
 	return {
 		publications,
-		pages: Math.ceil(publications.length / page_size),
+		pages: total_pages,
 		tags
 	};
 }
@@ -34,11 +35,9 @@ export async function load({ locals, url }) {
 /** @type {import('./$types').Actions} */
 export const actions = {
 	createPublication: async ({ locals, params, request }) => {
-		console.log('createPublication');
 		// if (!locals.user) error(401);
 
 		const data = await request.formData();
-		console.log("data: ", data)
 
 		try {
 			const response = await api.post(`create_publication`,

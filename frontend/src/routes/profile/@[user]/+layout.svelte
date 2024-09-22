@@ -9,7 +9,7 @@
 </script>
 
 <svelte:head>
-	<title>{data.profile.username} • Conduit</title>
+	<title>{data.profile.username} • Soul Pupils</title>
 </svelte:head>
 
 <div class="profile-page">
