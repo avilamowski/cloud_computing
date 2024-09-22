@@ -2,22 +2,22 @@
 	import ArticleMeta from './ArticleMeta.svelte';
 	import CommentContainer from './CommentContainer.svelte';
 	import { publicationStore } from '../../publicationStore.js';
-  import Markdown from '@magidoc/plugin-svelte-marked';
+	import Markdown from '@magidoc/plugin-svelte-marked';
 
 	/** @type {import('./$types').PageData} */
 
 	export let data;
+
 </script>
 
-<!-- <svelte:head> -->
-	<!-- <title>{publication.title}</title> -->
-<!-- </svelte:head> -->
+<svelte:head>
+	<title>{data.publication.title}</title>
+</svelte:head>
 
-{#if $publicationStore}
 <div class="article-page">
 	<div class="banner">
 		<div class="container">
-			<h1>{$publicationStore.title}</h1>
+			<h1>{data.publication.title}</h1>
 			<!-- <ArticleMeta article={data.article} user={data.user} /> -->
 		</div>
 	</div>
@@ -25,7 +25,7 @@
 	<div class="container page">
 		<div class="row article-content">
 			<div class="col-xs-12">
-				<Markdown source={$publicationStore?.content} />
+				<Markdown source={data.publication.content} />
 			</div>
 		</div>
 
@@ -58,4 +58,3 @@
 		<span>Read more...</span>
 	</a> -->
 <!-- </div> -->
-{/if}

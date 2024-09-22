@@ -14,16 +14,16 @@ export async function load({ locals, params, url }) {
 	// const dirty = marked(article.body);
 	// article.body = sanitizeHtml(dirty);
 
+	const qPub = new URLSearchParams();
+	qPub.set('publication_id', params.slug);
+	const { publication } = await api.get(`get_publications?${qPub}`);
 	
-	console.log('params', params.slug);
+	const qCom = new URLSearchParams();
+	qCom.set('publication_id', params.slug);
+	qCom.set('page', page);
+	const comments = await api.get(`get_comments?${qCom}`);
 
-	const q = new URLSearchParams();
-	q.set('publication_id', params.slug);
-	q.set('page', page);
-	const comments = await api.get(`get_comments?${q}`);
-	console.log(comments);
-
-	return { comments, tab, tag, page };
+	return { publication, comments, tab, tag, page };
 }
 
 /** @type {import('./$types').Actions} */

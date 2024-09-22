@@ -3,17 +3,40 @@ from models import Publication
 import json
 from sqlalchemy.orm import joinedload
 
+def get_single_publication(session, publication_id):
+    publication = session.query(Publication).filter_by(publication_id=publication_id).first()
+    return publication
 
 def lambda_handler(event, context):
     session = get_session()
 
     try:
         if event:
+            publication_id = event.get('queryStringParameters', {}).get('publication_id')
             search_term = event.get('queryStringParameters', {}).get('search_term')
             page = event.get('queryStringParameters', {}).get('page', 1)
         else:
+            publication_id = None
             search_term = None
             page = 1
+
+        # Single publication
+        if publication_id:
+            publication = get_single_publication(session, publication_id)
+            publication_data = publication.to_dict() if publication else None
+            session.close()
+            if not publication:
+                return {
+                    'statusCode': 404,
+                    'body': json.dumps({'error': 'publication not found'})
+                }
+            return {
+                'statusCode': 200,
+                'body': json.dumps({
+                    'publication': publication_data
+                })
+            }
+
 
         if not str(page).isdigit() or int(page) < 1:
             return {
