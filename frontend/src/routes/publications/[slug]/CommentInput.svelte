@@ -1,13 +1,24 @@
 <script>
 	import { enhance } from '$app/forms';
-	import { placeholder } from '$lib/constants.js';
 
-	// export let user;
+
+
 </script>
-
+		
 <form use:enhance method="POST" action="?/createComment" class="card comment-form">
-	<div class="card-block">
-		<textarea class="form-control" name="comment" placeholder="Write a comment..." rows="3" />
+	<div class="card-block" style="padding: 20px;">
+		
+		<h3 class="card-title">Post a comment</h3>
+
+		<div>
+			<label for="username">Username</label>
+			<input type="text" id="username" name="username" class="form-control" required />
+		</div>
+		<div>
+			<label for="email">Email</label>
+			<input type="email" id="email" name="email" class="form-control" required />
+		</div>
+		<textarea class="form-control" name="content" placeholder="Write a comment..." style="border: 1px solid #ccc; margin-top: 20px;"></textarea>
 	</div>
 
 	<div class="card-footer">

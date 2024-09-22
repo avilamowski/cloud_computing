@@ -5,9 +5,30 @@
 	import Markdown from '@magidoc/plugin-svelte-marked';
 
 	/** @type {import('./$types').PageData} */
-
 	export let data;
+	export let form;
 
+	let toastMessage = '';
+	let toastVisible = false;
+	let toastType = ''; // 'success' or 'error'
+
+	$: if (form?.success) {
+		toastMessage = 'Comment created successfully!';
+		toastType = 'success';
+		toastVisible = true;
+	}
+
+	$: if (form?.error) {
+		toastMessage = form.error;
+		toastType = 'error';
+		toastVisible = true;
+	}
+
+	$: if (toastVisible) {
+		setTimeout(() => {
+			toastVisible = false;
+		}, 3000);
+	}
 </script>
 
 <svelte:head>
@@ -18,7 +39,6 @@
 	<div class="banner">
 		<div class="container">
 			<h1>{data.publication.title}</h1>
-			<!-- <ArticleMeta article={data.article} user={data.user} /> -->
 		</div>
 	</div>
 
@@ -29,32 +49,40 @@
 			</div>
 		</div>
 
-
 		<hr />
 
+		<!-- Comment section -->
 		<div class="article-actions" />
-
 		<div class="row">
 			<CommentContainer comments={data.comments} errors={[]} />
 		</div>
 	</div>
 </div>
 
-<!-- <div class="article-preview"> -->
-	<!-- <div class="article-meta"> -->
-		<!-- <a href="/profile/@{publication.author}"> -->
-			<!-- <img src={article.author.image} alt={article.author.username} /> -->
-		<!-- </a> -->
+<!-- Toast Notification -->
+{#if toastVisible}
+	<div class="toast {toastType}">
+		{toastMessage}
+	</div>
+{/if}
 
-		<!-- <div class="info">
-			<a class="author" href="/profile/@{publication.user}">{publication.author}</a>
-			<span class="date">{new Date(publication.created_at).toDateString()}</span>
-		</div> -->
-	<!-- </div> -->
+<style>
+	.toast {
+		position: fixed;
+		bottom: 20px;
+		right: 20px;
+		color: white;
+		padding: 15px;
+		border-radius: 5px;
+		z-index: 1000;
+		transition: opacity 0.3s ease;
+	}
 
-	<!-- <a href="/article/{$publication.publication_id}" class="preview-link" on:click={() => publicationStore.set(publication)}>
-		<h1>{$publication.title}</h1>
-		<p>{$publication.content}</p>
-		<span>Read more...</span>
-	</a> -->
-<!-- </div> -->
+	.toast.success {
+		background-color: #28a745; /* Green background for success */
+	}
+
+	.toast.error {
+		background-color: #dc3545; /* Red background for error */
+	}
+</style>

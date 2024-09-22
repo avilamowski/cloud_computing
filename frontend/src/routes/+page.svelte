@@ -92,8 +92,6 @@
 									</div>
 									<div>
 										<label for="content">Content</label>
-										<!-- <MarkdownEditor {carta} textarea={{ 'name': "content", "required": true }} /> -->
-										 <!-- Set up markdown editor with width 20%	 -->
 										<MarkdownEditor {carta} textarea={{ 'name': "content", "required": true}}/>
 									</div>
 									<div class="form-group">
@@ -180,6 +178,4 @@
 		font-family: '...', monospace;
 		font-size: 1.1rem;
 	}
-
-	
 </style>
