@@ -4,11 +4,29 @@
 	import ArticleList from '$lib/ArticleList/index.svelte';
 	import Pagination from './Pagination.svelte';
 	import { Carta, MarkdownEditor } from 'carta-md';
+	import { attachment } from '@cartamd/plugin-attachment';
 	import 'carta-md/default.css';
+	import '@cartamd/plugin-attachment/default.css';
 	import Toast from './Toast.svelte';
 	import Searchbar from './Searchbar.svelte';
 
-	const carta = new Carta({});
+	const carta = new Carta({
+		extensions: [
+			attachment({
+				upload: async (file) => {
+					const formData = new FormData();
+					formData.append('image', file);
+					console.log(file)
+					const response = await fetch('/upload', {
+						method: 'POST',
+						body: formData
+					});
+					const data = await response.json();
+					return data.url;
+				}
+			})
+		]
+	});
 	let showModal = false;
 	let tag, tab, p, page_link_base, searchTerm;
 	let toastVisible = false;  // State for toast visibility

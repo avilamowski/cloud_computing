@@ -8,12 +8,11 @@
 	export let user;
 
 
-	function getFirstWords(content, wordCount) {
-		// if there are less than wordCount words, return the whole content
-		if (content.split(' ').length <= wordCount) return content;
-		return content?.split(' ').slice(0, wordCount).join(' ') + '...';
+	function getFirstChars(content, count) {
+		content = content.replace(/!\[.*\]\(.*\)/g, '');
+		if (content.length <= count) return content;
+		return content.slice(0, count) + '...';
 	}
-	// when clicking on href of the publication, send the information to the next page
 
 </script>
 
@@ -70,7 +69,7 @@
 		user_id: publication?.user_id,
 	})}>
 		<h1>{publication?.title}</h1>
-		<Markdown source={getFirstWords(publication?.content, 5)} />
+		<Markdown source={getFirstChars(publication?.content, 20)} />
 		<!-- <p>{publication?.content}</p> -->
 		<span>Read more...</span>
 		<!-- <ul class="tag-list"> -->

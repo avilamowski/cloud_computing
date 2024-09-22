@@ -29,7 +29,7 @@
 					</a>
 				</li>
 			{:else}
-				<li class="nav-item">
+				<!-- <li class="nav-item">
 					<a href="/login" class="nav-link" class:active={$page.url.pathname === '/login'}>
 						Sign in
 					</a>
@@ -39,7 +39,7 @@
 					<a href="/register" class="nav-link" class:active={$page.url.pathname === '/register'}>
 						Sign up
 					</a>
-				</li>
+				</li> -->
 			{/if}
 		</ul>
 	</div>
