@@ -1,10 +1,11 @@
 import * as api from '$lib/api.js';
 import { error, redirect } from '@sveltejs/kit';
-import { marked } from 'marked';
-import sanitizeHtml from 'sanitize-html';
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ locals, params }) {
+export async function load({ locals, params, url }) {
+	const tab = url.searchParams.get('tab') || 'all';
+	const tag = url.searchParams.get('tag');
+	const page = +(url.searchParams.get('page') ?? '1');
 	// const [{ article }, { comments }] = await Promise.all([
 	// 	api.get(`articles/${params.slug}`, locals.user?.token),
 	// 	api.get(`articles/${params.slug}/comments`, locals.user?.token)
@@ -13,32 +14,16 @@ export async function load({ locals, params }) {
 	// const dirty = marked(article.body);
 	// article.body = sanitizeHtml(dirty);
 
-	const comments = [
-		{
-			comment_id: 1,
-			content: "Comment 1",
-			user_id: "User 1",
-			publication_id: 1,
-			created_at: new Date(),
-		},
-		{
-			comment_id: 2,
-			content: "Comment 2",
-			user_id: "User 2",
-			publication_id: 1,
-			created_at: new Date(),
-		},
-		{
-			comment_id: 3,
-			content: "Comment 3",
-			user_id: "User 3",
-			publication_id: 1,
-			created_at: new Date(),
-		}
-	]
-    
+	
+	console.log('params', params.slug);
 
-	return { comments };
+	const q = new URLSearchParams();
+	q.set('publication_id', params.slug);
+	q.set('page', page);
+	const comments = await api.get(`get_comments?${q}`);
+	console.log(comments);
+
+	return { comments, tab, tag, page };
 }
 
 /** @type {import('./$types').Actions} */

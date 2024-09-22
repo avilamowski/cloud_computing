@@ -1,5 +1,6 @@
 <script>
 	import { publicationStore } from "../../routes/publicationStore.js";
+	import Markdown from '@magidoc/plugin-svelte-marked'
 
 
 
@@ -7,6 +8,11 @@
 	export let user;
 
 
+	function getFirstWords(content, wordCount) {
+		// if there are less than wordCount words, return the whole content
+		if (content.split(' ').length <= wordCount) return content;
+		return content?.split(' ').slice(0, wordCount).join(' ') + '...';
+	}
 	// when clicking on href of the publication, send the information to the next page
 
 </script>
@@ -55,7 +61,7 @@
 		{/if} -->
 	</div>
 
-	<a href="/article/{publication?.publication_id}" class="preview-link" on:click={publicationStore.set({
+	<a href="/publications/{publication?.publication_id}" class="preview-link" on:click={publicationStore.set({
 		publication_id: publication?.publication_id,
 		title: publication?.title,
 		content: publication?.content,
@@ -64,7 +70,8 @@
 		user_id: publication?.user_id,
 	})}>
 		<h1>{publication?.title}</h1>
-		<p>{publication?.content}</p>
+		<Markdown source={getFirstWords(publication?.content, 5)} />
+		<!-- <p>{publication?.content}</p> -->
 		<span>Read more...</span>
 		<!-- <ul class="tag-list"> -->
 			<!-- {#each article.tagList as tag}

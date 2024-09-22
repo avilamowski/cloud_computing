@@ -1,6 +1,5 @@
 import * as api from '$lib/api';
 import { page_size } from '$lib/constants';
-import { redirect } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals, url }) {
@@ -25,7 +24,6 @@ export async function load({ locals, url }) {
 
 	const {publications, total_pages, total_publications } = await api.get(`get_publications?${q}`);
 	const tags = [];
-	console.log(total_publications, total_pages)
 
 	return {
 		publications,

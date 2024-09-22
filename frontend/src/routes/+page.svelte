@@ -22,6 +22,11 @@
 
 	function toggleModal() {
 		showModal = !showModal;
+		if (showModal) {
+			document.body.style.overflow = 'hidden';
+		} else {
+			document.body.style.overflow = '';
+		}
 	}
 
 	/** @type {import('./$types').PageData} */
@@ -175,4 +180,6 @@
 		font-family: '...', monospace;
 		font-size: 1.1rem;
 	}
+
+	
 </style>

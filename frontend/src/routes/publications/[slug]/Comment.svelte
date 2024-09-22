@@ -2,7 +2,6 @@
 	import { enhance } from '$app/forms';
 
 	export let comment;
-	// export let user;
 </script>
 
 <div class="card">
@@ -15,11 +14,11 @@
 			<img src={comment.author.image} class="comment-author-img" alt={comment.author.username} />
 		</a> -->
 
-		<a href="/profile/@{comment.user_id}" class="comment-author">
-			{comment.user_id}
+		<a href="/profile/@{comment.user.username}" class="comment-author">
+			{comment.user.username}
 		</a>
 
-		<span class="date-posted">{new Date(comment.createdAt).toDateString()}</span>
+		<span class="date-posted">{new Date(comment.created_at).toDateString()}</span>
 
 		<!-- {#if user && comment.author.username === user.username}
 			<form use:enhance method="POST" action="?/deleteComment&id={comment.id}" class="mod-options">

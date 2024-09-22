@@ -2,34 +2,18 @@
 	import ArticleMeta from './ArticleMeta.svelte';
 	import CommentContainer from './CommentContainer.svelte';
 	import { publicationStore } from '../../publicationStore.js';
-	import { onMount } from 'svelte';
-
-	// let publication;
-
-	// onMount(() => {
-	// 	const unsubscribe = publicationStore.subscribe(value => {
-	// 		console.log("value", value);
-	// 		publication = value;
-	// 	});
-
-	// 	return () => {
-	// 		unsubscribe();
-	// 	};
-	// });
+  import Markdown from '@magidoc/plugin-svelte-marked';
 
 	/** @type {import('./$types').PageData} */
-	export let comments;
+
+	export let data;
 </script>
 
 <!-- <svelte:head> -->
 	<!-- <title>{publication.title}</title> -->
 <!-- </svelte:head> -->
-<!-- if publication is empty -->
+
 {#if $publicationStore}
-	
-
-
-
 <div class="article-page">
 	<div class="banner">
 		<div class="container">
@@ -41,23 +25,22 @@
 	<div class="container page">
 		<div class="row article-content">
 			<div class="col-xs-12">
-				<div>
-					{$publicationStore.content}
-				</div>
+				<Markdown source={$publicationStore?.content} />
 			</div>
 		</div>
+
 
 		<hr />
 
 		<div class="article-actions" />
 
-		<!-- <div class="row">
-			<CommentContainer comments={comments} errors={[]} />
-		</div> -->
+		<div class="row">
+			<CommentContainer comments={data.comments} errors={[]} />
+		</div>
 	</div>
 </div>
 
-<div class="article-preview">
+<!-- <div class="article-preview"> -->
 	<!-- <div class="article-meta"> -->
 		<!-- <a href="/profile/@{publication.author}"> -->
 			<!-- <img src={article.author.image} alt={article.author.username} /> -->
@@ -74,5 +57,5 @@
 		<p>{$publication.content}</p>
 		<span>Read more...</span>
 	</a> -->
-</div>
+<!-- </div> -->
 {/if}

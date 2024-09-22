@@ -14,7 +14,7 @@ export const actions = {
 		const data = await request.formData();
 
 		const result = await api.post(
-			'articles',
+			'publications',
 			{
 				article: {
 					title: data.get('title'),
@@ -28,6 +28,6 @@ export const actions = {
 
 		if (result.errors) return fail(400, result);
 
-		redirect(303, `/article/${result.article.slug}`);
+		redirect(303, `/publications/${result.article.slug}`);
 	}
 };
