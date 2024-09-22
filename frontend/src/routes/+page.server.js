@@ -4,15 +4,17 @@ import { redirect } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals, url }) {
-	const tab = url.searchParams.get('tab') || 'all';
-	const tag = url.searchParams.get('tag');
+	// const tab = url.searchParams.get('tab') || 'all';
+	// const tag = url.searchParams.get('tag');
 	const page = +(url.searchParams.get('page') ?? '1');
+	const searchTerm = url.searchParams.get('search');
 
 	// const endpoint = tab === 'feed' ? 'articles/feed' : 'articles';
 
 	const q = new URLSearchParams();
 
 	q.set('page', page);
+	if (searchTerm) q.set('search_term', searchTerm);
 	// q.set('offset', (page - 1) * page_size);
 	// if (tag) q.set('tag', tag);
 

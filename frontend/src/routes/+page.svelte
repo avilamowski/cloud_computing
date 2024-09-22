@@ -6,14 +6,16 @@
 	import { Carta, MarkdownEditor } from 'carta-md';
 	import 'carta-md/default.css';
 	import Toast from './Toast.svelte';
+	import Searchbar from './Searchbar.svelte';
 
 	const carta = new Carta({});
 	let showModal = false;
-	let tag, tab, p, page_link_base;
+	let tag, tab, p, page_link_base, searchTerm;
 	let toastVisible = false;  // State for toast visibility
 	let toastMessage = '';     // Message to display in the toast
 
 	$: p = +($page.url.searchParams.get('page') ?? '1');
+	$: searchTerm = $page.url.searchParams.get('search') ?? '';
 	// $: tag = $page.url.searchParams.get('tag');
 	// $: tab = $page.url.searchParams.get('tab') ?? 'all';
 	// $: page_link_base = `tag=${tag}&tab=${tab}`;
@@ -56,6 +58,7 @@
 			</div>
 
 			<div class="col-md-3">
+				<Searchbar {searchTerm} href={(t) => `/?search=${t}`}/>
 				<button class="btn btn-lg btn-primary btn-block" on:click={toggleModal} type="button">
 					Create Publication
 				</button>
@@ -84,7 +87,9 @@
 									</div>
 									<div>
 										<label for="content">Content</label>
-										<MarkdownEditor {carta} textarea={{ 'name': "content", "required": true }} />
+										<!-- <MarkdownEditor {carta} textarea={{ 'name': "content", "required": true }} /> -->
+										 <!-- Set up markdown editor with width 20%	 -->
+										<MarkdownEditor {carta} textarea={{ 'name': "content", "required": true}}/>
 									</div>
 									<div class="form-group">
 										<button class="btn btn-primary" type="submit">Submit</button>
@@ -96,12 +101,12 @@
 					{/if}
 
 					<!-- Popular Tags -->
-					<p>Popular Tags</p>
+					<!-- <p>Popular Tags</p>
 					<div class="tag-list">
 						{#each data.tags as tag}
 							<a href="/?tag={tag}" class="tag-default tag-pill">{tag}</a>
 						{/each}
-					</div>
+					</div> -->
 				</div>
 			</div>
 		</div>
@@ -126,7 +131,8 @@
 
 	.modal-content {
 		background-color: #fefefe;
-		margin: 15% auto;
+		/* center horizontally */
+		margin: 5% auto;
 		padding: 20px;
 		border: 1px solid #888;
 		width: 80%;
@@ -153,6 +159,16 @@
 	.btn-block {
 		width: 100%;
 		margin-bottom: 20px;
+	}
+	
+	:global(.carta-wrapper) {
+		height: 400px;
+		overflow: auto;
+	}
+
+	:global(.carta-container) {
+		height: 100%;
+		overflow: hidden;
 	}
 
 	:global(.carta-font-code) {

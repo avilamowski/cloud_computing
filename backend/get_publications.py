@@ -22,10 +22,10 @@ def lambda_handler(event, context):
             }
 
         publication_query = session.query(Publication)
-        publications_count = publication_query.count()
         if search_term:
             publication_query = \
                 publication_query.filter(Publication.title.ilike(f'%{search_term}%') | Publication.content.ilike(f'%{search_term}%'))
+        publications_count = publication_query.count()
 
         # publications = publication_query.limit(10).offset((int(page) - 1) * 10).all()
         # get publications and user data
