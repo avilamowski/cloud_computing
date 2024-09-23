@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import * as api from '$lib/api';
-
+  import Toast from '../../Toast.svelte';
 	/** @type {import('./$types').PageData} */
 	let data;
 	let form;
@@ -14,8 +14,6 @@
 	let toastType = ''; // 'success' or 'error'
 	let publication = null;
 	let comments = [];
-
-
 
 	$: p = +($page.url.searchParams.get('page') ?? '1');
 	$: title = publication?.title || 'Loading';
@@ -76,11 +74,14 @@
 						username: e.detail.comment.username,
 						email: e.detail.comment.email
 				},
-				publication_id: publicationId
+				publication_id: publicationId,
+				created_at: new Date().toISOString()
 		}
+		console.log("Comment", comment)
 
 		try {
 			const response = await api.post(`create_comment`, comment);
+			comment.comment_id = response.comment_id;
 			console.log("Success!")
 			form = { success: 'Comment was created successfully' };
 			comments = [comment, ...comments];
@@ -118,32 +119,7 @@
 			<CommentContainer {comments} errors={[]} on:commentForm={loadNewComment}/>
 		</div>
 	</div>
+	<Toast message={toastMessage} visible={toastVisible} type={toastType} />
+
 </div>
 
-<!-- Toast Notification -->
-{#if toastVisible}
-	<div class="toast {toastType}">
-		{toastMessage}
-	</div>
-{/if}
-
-<style>
-	.toast {
-		position: fixed;
-		bottom: 20px;
-		right: 20px;
-		color: white;
-		padding: 15px;
-		border-radius: 5px;
-		z-index: 1000;
-		transition: opacity 0.3s ease;
-	}
-
-	.toast.success {
-		background-color: #28a745; /* Green background for success */
-	}
-
-	.toast.error {
-		background-color: #dc3545; /* Red background for error */
-	}
-</style>
