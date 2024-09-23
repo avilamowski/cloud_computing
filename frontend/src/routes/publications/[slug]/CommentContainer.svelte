@@ -24,6 +24,6 @@
 		<Comment {comment} />
 	{/each}
 	<div>
-		<CommentInput />
+		<CommentInput on:commentForm/>
 	</div>
 </div>
