@@ -28,9 +28,18 @@ def lambda_handler(event, context):
                 'body': json.dumps({'error': 'invalid page'})
             }
         
-        comments = session.query(Comment).filter_by(publication_id=publication_id).order_by(Comment.created_at.desc()).options(joinedload(Comment.user)).limit(10).offset((int(page) - 1) * 10).all()
+        comments_query = session.query(Comment).filter_by(publication_id=publication_id)
+        
+        comments = comments_query.order_by(Comment.created_at.desc()).options(joinedload(Comment.user)).limit(10).offset((int(page) - 1) * 10).all()
 
-        result = [ comment.to_dict() for comment in comments ]
+        comments_count = comments_query.count()
+        
+        result = {
+            'comments': [ comment.to_dict() for comment in comments ],
+            'page': int(page),
+            'total_pages': max(0, int((comments_count - 1) / 10) + 1),
+            'total_comments': comments_count
+        }
         session.close()
 
         return {

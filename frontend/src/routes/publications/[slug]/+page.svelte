@@ -1,68 +1,96 @@
 <script>
 	import CommentContainer from './CommentContainer.svelte';
+	import Markdown from '@magidoc/plugin-svelte-marked';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import * as api from '$lib/api';
 	import Toast from '../../Toast.svelte';
-	import { marked } from 'marked';
-	import sanitizeHtml from 'sanitize-html';
 
-
-	/** @type {import('./$types').PageData} */
 	let data;
 	let form;
-
 	let toastMessage = '';
 	let toastVisible = false;
-	let toastType = ''; // 'success' or 'error'
+	let toastType = ''; // 'success' o 'error'
 	let publication = null;
 	let comments = [];
+	let currentPage = 1; 
+	let totalPages = 1;  
+	let loading = false; 
 
 	$: p = +($page.url.searchParams.get('page') ?? '1');
 	$: title = publication?.title || 'Loading';
 	$: content = publication?.content || '';
 
 	onMount(async () => {
-
-		const params = $page.params;
-		// const article }, { comments }] = await Promise.all([
-		// 	api.get(`articles/${params.slug}`, locals.user?.token),
-		// 	api.get(`articles/${params.slug}/comments`, locals.user?.token)
-		// ]);
-
-		// const dirty = marked(article.body);
-		// article.body = sanitizeHtml(dirty);
-
-		const qPub = new URLSearchParams();
-		qPub.set('publication_id', params.slug);
-		const { publication: pub } = await api.get(`get_publications?${qPub}`);
-
-		const dirty = marked(pub.content);
-		pub.content = sanitizeHtml(dirty);
-		
-		const qCom = new URLSearchParams();
-		qCom.set('publication_id', params.slug);
-		qCom.set('page', p);
-		const com = await api.get(`get_comments?${qCom}`);
-
-		data = { pub, page };
-		publication = pub;
-		comments = [...comments, ...com];
+		await fetchData();
 	});
 
+	async function fetchData() {
+		const params = $page.params;
+		const qPub = new URLSearchParams();
+		qPub.set('publication_id', params.slug);
 
+		const { publication: pub } = await api.get(`get_publications?${qPub}`);
+		publication = pub;
+
+		await loadComments();
+	}
+
+	async function loadComments() {
+		if (loading || currentPage > totalPages) return;
+		loading = true;
+
+		const params = $page.params;
+		const qCom = new URLSearchParams();
+		qCom.set('publication_id', params.slug);
+		qCom.set('page', currentPage);
+
+		const { comments: com, total_pages } = await api.get(`get_comments?${qCom}`);
+
+		console.log(com);
+		comments = [...comments, ...com];
+
+		totalPages = total_pages;
+		currentPage += 1;
+
+		loading = false;
+	}
+
+	const loadNewComment = async (e) => {
+		const publicationId = $page.params.slug;
+		const comment = {
+			...e.detail.comment,
+			user: {
+				username: e.detail.comment.username,
+				email: e.detail.comment.email
+			},
+			publication_id: publicationId,
+			created_at: new Date().toISOString()
+		};
+
+		try {
+			const response = await api.post(`create_comment`, comment);
+			comment.comment_id = response.comment_id;
+
+			form = { success: 'Comment was created successfully' };
+			comments = [comment, ...comments];
+			
+		} catch (e) {
+			form = { error: 'Username or email are in use' };
+		}
+	};
+
+	// Lógica para mostrar el Toast
 	$: if (form?.success) {
 		toastMessage = 'Comment created successfully!';
 		toastType = 'success';
 		toastVisible = true;
-		console.log("Reactivity! success")
 	}
 
 	$: if (form?.error) {
 		toastMessage = form.error;
 		toastType = 'error';
 		toastVisible = true;
-		console.log("Reactivity! fail")
 	}
 
 	$: if (toastVisible) {
@@ -70,39 +98,12 @@
 			toastVisible = false;
 		}, 3000);
 	}
-
-	const loadNewComment = async (e) => {
-		// from url
-		const publicationId = $page.params.slug;
-		const comment = {
-				...e.detail.comment,
-				user: {
-						username: e.detail.comment.username,
-						email: e.detail.comment.email
-				},
-				publication_id: publicationId,
-				created_at: new Date().toISOString()
-		}
-		console.log("Comment", comment)
-
-		try {
-			const response = await api.post(`create_comment`, comment);
-			comment.comment_id = response.comment_id;
-			console.log("Success!")
-			form = { success: 'Comment was created successfully' };
-			comments = [comment, ...comments];
-			// TODO: Fix this
-		} catch (e) {
-			console.log("Fail!", e)
-			form = { error: 'Username or email are in use' };
-		}
-	};
 </script>
+
 
 <svelte:head>
 	<title>{title}</title>
 </svelte:head>
-
 <div class="article-page">
 	<div class="banner">
 		<div class="container">
@@ -113,20 +114,30 @@
 	<div class="container page">
 		<div class="row article-content">
 			<div class="col-xs-12">
-				<!-- <Markdown source={content || ''}/> -->
-				 {@html content}
+				<Markdown source={content || ''} />
 			</div>
 		</div>
 
 		<hr />
 
-		<!-- Comment section -->
-		<div class="article-actions" />
+		<!-- Sección de comentarios -->
 		<div class="row">
-			<CommentContainer {comments} errors={[]} on:commentForm={loadNewComment}/>
+			<CommentContainer {comments} errors={[]} on:commentForm={loadNewComment} />
 		</div>
+
+		<!-- Botón para cargar más comentarios -->
+		{#if currentPage <= totalPages}
+			<div style="display: flex; justify-content: center;">
+				<button class="btn btn-primary" on:click={loadComments} disabled={loading}>
+					{#if loading}
+						Loading...
+					{:else}
+						Load more comments...
+					{/if}
+				</button>
+			</div>
+		{/if}
 	</div>
+
 	<Toast message={toastMessage} visible={toastVisible} type={toastType} />
-
 </div>
-
