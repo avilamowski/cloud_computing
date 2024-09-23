@@ -19,11 +19,11 @@
 			to add comments on this article.
 		</p>
 	{/if} -->
-
-	{#each comments as comment (comment.comment_id)}
-		<Comment {comment} />
-	{/each}
 	<div>
 		<CommentInput on:commentForm/>
 	</div>
+	{#each comments as comment (comment.comment_id)}
+		<Comment {comment} />
+	{/each}
+	
 </div>

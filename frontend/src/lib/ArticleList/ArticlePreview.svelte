@@ -22,7 +22,7 @@
 			<img src={article.author.image} alt={article.author.username} /> -->
 		<!-- </a> -->
 
-		<div class="info">
+		<div class="info" style="margin: 0;">
 			<!-- <a class="author" href="/profile/@{publication.user}">{publication.author}</a> -->
 			{publication.user.username}
 			<span class="date">{new Date(publication.created_at).toDateString()}</span>
@@ -71,8 +71,8 @@
 	})}>
 		<h1>{publication?.title}</h1>
 		{getFirstChars(publication?.content, 20)}
-		<!-- <Markdown source={getFirstChars(publication?.content, 20)} /> -->
-		<!-- <p>{publication?.content}</p> -->
+		<!-- read more in a new line -->
+		<br />
 		<span>Read more...</span>
 		<!-- <ul class="tag-list"> -->
 			<!-- {#each article.tagList as tag}

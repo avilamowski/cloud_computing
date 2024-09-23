@@ -12,6 +12,7 @@
 				email: data.get('email')
 			} 
 		});
+		e.target.reset();
 	};
 </script>
 		
