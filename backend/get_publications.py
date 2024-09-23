@@ -51,8 +51,8 @@ def lambda_handler(event, context):
         publications_count = publication_query.count()
 
         # publications = publication_query.limit(10).offset((int(page) - 1) * 10).all()
-        # get publications and user data
-        publications = publication_query.limit(10).offset((int(page) - 1) * 10).options(joinedload(Publication.user)).all()
+
+        publications = publication_query.order_by(Publication.created_at.desc()).limit(10).offset((int(page) - 1) * 10).options(joinedload(Publication.user)).all()
 
         result = {
             'publications': [ pub.to_dict() for pub in publications ],
