@@ -1,5 +1,4 @@
 <script>
-	import ArticleMeta from './ArticleMeta.svelte';
 	import CommentContainer from './CommentContainer.svelte';
 	import Markdown from '@magidoc/plugin-svelte-marked';
 	import { onMount } from 'svelte';
@@ -44,7 +43,7 @@
 
 		data = { pub, page };
 		publication = pub;
-		comments = com;
+		comments = [...comments, ...com];
 	});
 
 
@@ -52,12 +51,14 @@
 		toastMessage = 'Comment created successfully!';
 		toastType = 'success';
 		toastVisible = true;
+		console.log("Reactivity! success")
 	}
 
 	$: if (form?.error) {
 		toastMessage = form.error;
 		toastType = 'error';
 		toastVisible = true;
+		console.log("Reactivity! fail")
 	}
 
 	$: if (toastVisible) {
@@ -71,6 +72,10 @@
 		const publicationId = $page.params.slug;
 		const comment = {
 				...e.detail.comment,
+				user: {
+						username: e.detail.comment.username,
+						email: e.detail.comment.email
+				},
 				publication_id: publicationId
 		}
 
@@ -78,7 +83,6 @@
 			const response = await api.post(`create_comment`, comment);
 			console.log("Success!")
 			form = { success: 'Comment was created successfully' };
-			console.log(data)
 			comments = [comment, ...comments];
 			// TODO: Fix this
 		} catch (e) {
@@ -111,7 +115,7 @@
 		<!-- Comment section -->
 		<div class="article-actions" />
 		<div class="row">
-			<CommentContainer comments={comments} errors={[]} on:commentForm={loadNewComment}/>
+			<CommentContainer {comments} errors={[]} on:commentForm={loadNewComment}/>
 		</div>
 	</div>
 </div>

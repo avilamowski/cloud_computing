@@ -1,6 +1,5 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
-	import * as api from '$lib/api';
 	const dispatch = createEventDispatcher();
 
 	const createComment = async (e) => {

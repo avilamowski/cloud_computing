@@ -14,9 +14,9 @@
 			<img src={comment.author.image} class="comment-author-img" alt={comment.author.username} />
 		</a> -->
 
-		<a href="/profile/@{comment.user.username}" class="comment-author">
+		<!-- <a href="/" class="comment-author"> -->
 			{comment.user.username}
-		</a>
+		<!-- </a> -->
 
 		<span class="date-posted">{new Date(comment.created_at).toDateString()}</span>
 
