@@ -1,10 +1,13 @@
 <script>
 	import CommentContainer from './CommentContainer.svelte';
-	import Markdown from '@magidoc/plugin-svelte-marked';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import * as api from '$lib/api';
-  import Toast from '../../Toast.svelte';
+	import Toast from '../../Toast.svelte';
+	import { marked } from 'marked';
+	import sanitizeHtml from 'sanitize-html';
+
+
 	/** @type {import('./$types').PageData} */
 	let data;
 	let form;
@@ -33,6 +36,9 @@
 		const qPub = new URLSearchParams();
 		qPub.set('publication_id', params.slug);
 		const { publication: pub } = await api.get(`get_publications?${qPub}`);
+
+		const dirty = marked(pub.content);
+		pub.content = sanitizeHtml(dirty);
 		
 		const qCom = new URLSearchParams();
 		qCom.set('publication_id', params.slug);
@@ -107,7 +113,8 @@
 	<div class="container page">
 		<div class="row article-content">
 			<div class="col-xs-12">
-				<Markdown source={content || ''} />
+				<!-- <Markdown source={content || ''}/> -->
+				 {@html content}
 			</div>
 		</div>
 
