@@ -28,7 +28,7 @@ def lambda_handler(event, context):
                 'body': json.dumps({'error': 'invalid page'})
             }
         
-        comments = session.query(Comment).filter_by(publication_id=publication_id).limit(10).offset((int(page) - 1) * 10).options(joinedload(Comment.user)).all()
+        comments = session.query(Comment).filter_by(publication_id=publication_id).order_by(Comment.created_at.desc()).options(joinedload(Comment.user)).limit(10).offset((int(page) - 1) * 10).all()
 
         result = [ comment.to_dict() for comment in comments ]
         session.close()
