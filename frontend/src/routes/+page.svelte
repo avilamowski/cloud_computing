@@ -9,9 +9,9 @@
 	import '@cartamd/plugin-attachment/default.css';
 	import Toast from './Toast.svelte';
 	import Searchbar from './Searchbar.svelte';
-	import { afterUpdate, onMount } from 'svelte';
 	import * as api from '$lib/api';
 	import { afterNavigate, goto } from '$app/navigation';
+
 
 	const carta = new Carta({
 		extensions: [
@@ -164,7 +164,6 @@
 				<button class="btn btn-lg btn-primary btn-block" on:click={toggleModal} type="button">
 					Create Publication
 				</button>
-				<div class="sidebar">
 					<!-- Modal -->
 					{#if showModal}
 						<div class="modal" role="dialog">
@@ -197,6 +196,7 @@
 						</div>
 					{/if}
 
+				<!-- <div class="sidebar"> -->
 					<!-- Popular Tags -->
 					<!-- <p>Popular Tags</p>
 					<div class="tag-list">
@@ -204,7 +204,7 @@
 							<a href="/?tag={tag}" class="tag-default tag-pill">{tag}</a>
 						{/each}
 					</div> -->
-				</div>
+				<!-- </div> -->
 			</div>
 		</div>
 	</div>
@@ -264,13 +264,22 @@
 	}
 
 	:global(.carta-container) {
-		height: 100%;
+		height: 400px;
 		overflow: hidden;
 	}
 
 	:global(.carta-font-code) {
 		font-family: '...', monospace;
 		font-size: 1.1rem;
+	}
+
+	:global(.carta-input, .carta-renderer) {
+		height: 400px !important;
+	}
+
+	:global(.carta-theme__default .carta-container > *) {
+		margin: 0;
+		padding: 10px;
 	}
 
 </style>

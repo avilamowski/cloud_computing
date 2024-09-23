@@ -29,7 +29,7 @@
 			<label for="email">Email</label>
 			<input type="email" id="email" name="email" class="form-control" required />
 		</div>
-		<textarea class="form-control" name="content" placeholder="Write a comment..." style="border: 1px solid #ccc; margin-top: 20px;"></textarea>
+		<textarea class="form-control" name="content" placeholder="Write a comment..." style="border: 1px solid #ccc; margin-top: 20px;" required></textarea>
 	</div>
 
 	<div class="card-footer">

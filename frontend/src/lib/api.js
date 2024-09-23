@@ -1,5 +1,6 @@
 import { error } from '@sveltejs/kit';
 import { PUBLIC_BASE_PATH } from '$env/static/public';
+import { isLoading } from '../routes/store';
 // const base = 'https://api.realworld.io/api';
 // const base = 'https://0lhje3xjl2.execute-api.us-east-1.amazonaws.com/default/';
 const base = PUBLIC_BASE_PATH;
@@ -15,7 +16,9 @@ async function send({ method, path, data, token }) {
 		// 	opts.headers['Authorization'] = `Token ${token}`;
 		// }
 		
+		isLoading.set(true);
 		const res = await fetch(`${base}/${path}`, opts);
+		isLoading.set(false);
 		if (res.ok || res.status === 422) {
 			const text = await res.text();
 			return text ? JSON.parse(text) : {};

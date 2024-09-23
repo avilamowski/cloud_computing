@@ -1,9 +1,4 @@
 <script>
-	import { publicationStore } from "../../routes/publicationStore.js";
-	import Markdown from '@magidoc/plugin-svelte-marked'
-
-
-
 	export let publication;
 	export let user;
 
@@ -61,14 +56,7 @@
 		{/if} -->
 	</div>
 
-	<a href="/publications/{publication?.publication_id}" class="preview-link" on:click={publicationStore.set({
-		publication_id: publication?.publication_id,
-		title: publication?.title,
-		content: publication?.content,
-		created_at: publication?.created_at,
-		user: publication?.user,
-		user_id: publication?.user_id,
-	})}>
+	<a href="/publications/{publication?.publication_id}" class="preview-link">
 		<h1>{publication?.title}</h1>
 		{getFirstChars(publication?.content, 20)}
 		<!-- read more in a new line -->

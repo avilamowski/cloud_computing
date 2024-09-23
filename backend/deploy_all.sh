@@ -1,4 +1,6 @@
-./deploy.sh create_comment 465325848274
-./deploy.sh create_publication 465325848274
-./deploy.sh get_comments 465325848274
-./deploy.sh get_publications 465325848274
+#!/bin/bash
+number=$1
+./deploy.sh create_comment $1
+./deploy.sh create_publication $1 
+./deploy.sh get_comments $1
+./deploy.sh get_publications $1 
