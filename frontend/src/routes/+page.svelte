@@ -60,8 +60,10 @@
 	let showModal = false;
 	let tag, tab, p, page_link_base, searchTerm;
 	let publications;
+
 	let toastVisible = false;  // State for toast visibility
 	let toastMessage = '';     // Message to display in the toast
+	let toastType = '';
 
 	$: p = +($page.url.searchParams.get('page') ?? '1');
 	$: searchTerm = $page.url.searchParams.get('search') ?? '';
@@ -113,6 +115,7 @@
 
 				},
 			);
+			document.body.style.overflow = '';
 			goto(`/publications/${response.publication_id}`);
 		} catch (e) {
 			form = {error: "Username or email are in use"}
@@ -121,10 +124,10 @@
 
 	/** @type {import('./$types').PageData} */
 
-	$: if (form?.success) {
-		toastMessage = 'Publication created successfully!'; // Set the toast message
+	$: if (form?.error) {
+		toastMessage = 'Username or email are in use!'; // Set the toast message
 		toastVisible = true; // Show the toast
-		toggleModal();
+		toastType = 'error'; // Set the toast type
 	}
 
 </script>
@@ -162,9 +165,6 @@
 					{#if showModal}
 						<div class="modal" role="dialog">
 							<div class="modal-content">
-								{#if form?.error}
-									<div class="alert alert-danger">{form.error}</div>
-								{/if}
 								<span class="close" on:click={toggleModal} role="button" tabindex="0" aria-label="Close" aria-hidden="true" aria-controls="modal"> &times;</span>
 								<h2>Create New Publication</h2>
 								<form method="POST" action="?/createPublication" on:submit={createPublication}>
@@ -205,8 +205,8 @@
 		</div>
 	</div>
 
-	<!-- Toast Notification -->
-	<Toast message={toastMessage} visible={toastVisible} />
+	<Toast message={toastMessage} visible={toastVisible} type={toastType} />
+
 </div>
 
 <style>
@@ -268,4 +268,5 @@
 		font-family: '...', monospace;
 		font-size: 1.1rem;
 	}
+
 </style>

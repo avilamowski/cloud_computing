@@ -10,6 +10,6 @@
 
 # mv .env.dev .env
 
-bucket_name = $1
+bucket_name=$1
 npm run build
 aws s3 cp build s3://$1 --recursive

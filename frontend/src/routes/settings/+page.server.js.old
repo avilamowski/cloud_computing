@@ -7,7 +7,7 @@ export function load({ locals }) {
 
 /** @type {import('./$types').Actions} */
 export const actions = {
-	logout: async ({ cookies, locals }) => {
+	logout: async ({ cookies, lo./$types.js=> {
 		cookies.delete('jwt', { path: '/' });
 		locals.user = null;
 	},
