@@ -22,10 +22,11 @@
 			<img src={article.author.image} alt={article.author.username} /> -->
 		<!-- </a> -->
 
-		<!-- <div class="info">
-			<a class="author" href="/profile/@{publication.user}">{publication.author}</a>
+		<div class="info">
+			<!-- <a class="author" href="/profile/@{publication.user}">{publication.author}</a> -->
+			{publication.user.username}
 			<span class="date">{new Date(publication.created_at).toDateString()}</span>
-		</div> -->
+		</div>
 
 		<!-- {#if user}
 			<form
