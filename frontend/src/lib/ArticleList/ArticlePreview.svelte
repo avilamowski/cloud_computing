@@ -69,7 +69,8 @@
 		user_id: publication?.user_id,
 	})}>
 		<h1>{publication?.title}</h1>
-		<Markdown source={getFirstChars(publication?.content, 20)} />
+		{getFirstChars(publication?.content, 20)}
+		<!-- <Markdown source={getFirstChars(publication?.content, 20)} /> -->
 		<!-- <p>{publication?.content}</p> -->
 		<span>Read more...</span>
 		<!-- <ul class="tag-list"> -->
