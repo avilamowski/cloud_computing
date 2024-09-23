@@ -19,6 +19,10 @@
 				upload: async (file) => {
 					const formData = new FormData();
 					formData.append('image', file);
+
+					if (!['png', 'jpg', 'jpeg', 'gif'].includes(file.name.split('.').pop()) || file.size > 20 * 1024 * 1024)
+						return 'Unsupported file type or size';
+
 					const url = await uploadImage(formData);
 					return url;
 				}
