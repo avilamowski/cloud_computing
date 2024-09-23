@@ -1,11 +1,22 @@
 <script>
-	import { enhance } from '$app/forms';
+	import { createEventDispatcher } from 'svelte';
+	import * as api from '$lib/api';
+	const dispatch = createEventDispatcher();
 
-
-
+	const createComment = async (e) => {
+		e.preventDefault();
+		const data = new FormData(e.target);
+		dispatch('commentForm', {
+			comment: {
+				content: data.get('content'),
+				username: data.get('username'),
+				email: data.get('email')
+			} 
+		});
+	};
 </script>
 		
-<form use:enhance method="POST" action="?/createComment" class="card comment-form">
+<form method="POST" action="?/createComment" class="card comment-form" on:submit={createComment}>
 	<div class="card-block" style="padding: 20px;">
 		
 		<h3 class="card-title">Post a comment</h3>
