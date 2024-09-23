@@ -11,7 +11,7 @@
 	import Searchbar from './Searchbar.svelte';
 	import { afterUpdate, onMount } from 'svelte';
 	import * as api from '$lib/api';
-	import { afterNavigate } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 
 	const carta = new Carta({
 		extensions: [
@@ -112,11 +112,10 @@
 						// tagList: data.get('tagList').split(' ')
 
 				},
-				// locals.user.token			
 			);
-			return {success: "Publication was created successfully"};
+			goto(`/publications/${response.publication_id}`);
 		} catch (e) {
-			return {error: "Username or email are in use"}
+			form = {error: "Username or email are in use"}
 		}
 	}
 
