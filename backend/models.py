@@ -52,8 +52,8 @@ class User(Base):
     __tablename__ = 'users'
 
     user_id = Column(String, primary_key=True)
-    username = Column(String(100), nullable=False)
-    email = Column(String(100), nullable=False)
+    username = Column(String(100), nullable=False, unique=True)
+    email = Column(String(100), nullable=False, unique=True)
 
     publications = relationship("Publication", back_populates="user")
     comments = relationship("Comment", back_populates="user")

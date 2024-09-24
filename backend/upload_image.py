@@ -13,6 +13,19 @@ def lambda_handler(event, context):
         body = json.loads(event['body'])
         image_data = body['image_data']
         file_type = body.get('file_type', 'jpeg')
+
+        if file_type not in ['jpg', 'jpeg', 'png', 'gif']:
+            return {
+                'statusCode': 400,
+                'body': json.dumps('Invalid file type. Only "jpeg", "png" and "gif" are allowed.')
+            }
+        
+        if len(image_data) > 20 * 1024 * 1024:
+            return {
+                'statusCode': 400,
+                'body': json.dumps('Image size exceeds the limit of 20MB.')
+            }
+
     except KeyError:
         return {
             'statusCode': 400,

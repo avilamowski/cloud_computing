@@ -20,6 +20,7 @@ def get_session():
 def create_database():
     root_session = sessionmaker(bind=create_engine(f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/postgres"))()
     root_session.execute(text("commit"))
+    root_session.execute(text(f"DROP DATABASE IF EXISTS {DB_NAME}"))
     root_session.execute(text(f"CREATE DATABASE {DB_NAME}"))
     root_session.close()
     session = get_session()
