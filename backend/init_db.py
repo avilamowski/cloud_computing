@@ -1,81 +1,43 @@
 from sqlalchemy.sql import text
-from db import create_database
+from db import create_database, get_session
+from models import Comment, User, Publication
 import logging
+from uuid import UUID
+from datetime import datetime
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     session = create_database()
+    # session = get_session()
 
     logger.info("Creating tables")
 
-    queries = text("""
-    CREATE TABLE users(
-        user_id UUID PRIMARY KEY,
-        username VARCHAR(100) UNIQUE NOT NULL,
-        email VARCHAR(100) UNIQUE NOT NULL
-    );
+    User.__table__.create(session.get_bind(), checkfirst=True)
+    Publication.__table__.create(session.get_bind(), checkfirst=True)
+    Comment.__table__.create(session.get_bind(), checkfirst=True)
 
-    CREATE TABLE publications(
-        publication_id UUID PRIMARY KEY,
-        title TEXT NOT NULL,
-        content TEXT NOT NULL,
-        user_id UUID NOT NULL REFERENCES users(user_id),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
+    users = [
+        {"user_id": UUID('550e8400-e29b-41d4-a716-446655440000'), "username": 'user1', "email": 'user1@example.com'},
+        {"user_id": UUID('550e8400-e29b-41d4-a716-446655440001'), "username": 'user2', "email": 'user2@example.com'}
+    ]
+    session.bulk_insert_mappings(User, users)
 
-    CREATE TABLE comments(
-        comment_id UUID PRIMARY KEY,
-        content TEXT NOT NULL,
-        user_id UUID NOT NULL REFERENCES users(user_id),
-        publication_id UUID NOT NULL REFERENCES publications(publication_id),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
+    publications = [
+        {"publication_id": UUID('660e8400-e29b-41d4-a716-446655440000'), "title": 'Publication 1', "content": 'Content for publication 1', "user_id": UUID('550e8400-e29b-41d4-a716-446655440000'), "created_at": datetime.now()},
+        {"publication_id": UUID('660e8400-e29b-41d4-a716-446655440001'), "title": 'Publication 2', "content": 'Content for publication 2', "user_id": UUID('550e8400-e29b-41d4-a716-446655440001'), "created_at": datetime.now()}
+    ]
+    session.bulk_insert_mappings(Publication, publications)
 
-    CREATE TABLE tags(
-        tag_id SERIAL PRIMARY KEY,
-        tag_name VARCHAR(100) NOT NULL
-    );
+    comments = [
+        {"comment_id": UUID('770e8400-e29b-41d4-a716-446655440000'), "content": 'Comment for publication 1', "user_id": UUID('550e8400-e29b-41d4-a716-446655440001'), "publication_id": UUID('660e8400-e29b-41d4-a716-446655440000'), "created_at": datetime.now()},
+        {"comment_id": UUID('770e8400-e29b-41d4-a716-446655440001'), "content": 'Another comment for publication 2', "user_id": UUID('550e8400-e29b-41d4-a716-446655440000'), "publication_id": UUID('660e8400-e29b-41d4-a716-446655440001'), "created_at": datetime.now()}
+    ]
+    session.bulk_insert_mappings(Comment, comments)
 
-    CREATE TABLE publications_tags(
-        publication_id UUID NOT NULL REFERENCES publications(publication_id),
-        tag_id SERIAL NOT NULL REFERENCES tags(tag_id),
-        PRIMARY KEY(publication_id, tag_id)
-    );
 
-    -- Insert users
-    INSERT INTO users (user_id, username, email)
-    VALUES
-    ('550e8400-e29b-41d4-a716-446655440000', 'user1', 'user1@example.com'),
-    ('550e8400-e29b-41d4-a716-446655440001', 'user2', 'user2@example.com');
-
-    -- Insert publications
-    INSERT INTO publications (publication_id, title, content, user_id)
-    VALUES
-    ('660e8400-e29b-41d4-a716-446655440000', 'Publication 1', 'Content for publication 1', '550e8400-e29b-41d4-a716-446655440000'),
-    ('660e8400-e29b-41d4-a716-446655440001', 'Publication 2', 'Content for publication 2', '550e8400-e29b-41d4-a716-446655440001');
-
-    -- Insert comments
-    INSERT INTO comments (comment_id, content, user_id, publication_id)
-    VALUES
-    ('770e8400-e29b-41d4-a716-446655440000', 'Comment for publication 1', '550e8400-e29b-41d4-a716-446655440001', '660e8400-e29b-41d4-a716-446655440000'),
-    ('770e8400-e29b-41d4-a716-446655440001', 'Another comment for publication 2', '550e8400-e29b-41d4-a716-446655440000', '660e8400-e29b-41d4-a716-446655440001');
-
-    -- Insert tags
-    INSERT INTO tags (tag_name)
-    VALUES
-    ('Technology'),
-    ('Science');
-
-    -- Insert publications_tags
-    INSERT INTO publications_tags (publication_id, tag_id)
-    VALUES
-    ('660e8400-e29b-41d4-a716-446655440000', 1),
-    ('660e8400-e29b-41d4-a716-446655440001', 2);
-    """)
-
-    session.execute(queries)
+    session.commit()
     session.close()
 
     logger.info("Tables created successfully")
