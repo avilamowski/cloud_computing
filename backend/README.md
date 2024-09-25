@@ -1,14 +1,21 @@
 # Commands 
 
-Test locally:
+### Developed with Python 3.11 and AWS Lambda 
+
+## Test locally:
 ```bash
 docker compose up --watch
+```
 
-Build image:
-```docker build -t get_publications .```
+## Deploy all lambdas (docker)
+```bash
+./deploy_all.sh [aws_id]
+```
 
-Tag image:
-```docker tag get_publications:latest [aws_account_id].dkr.ecr.us-east-1.amazonaws.com/get_publications:latest```
+## Deploy a single lambda (docker)
+```bash
+./deploy.sh [lambda_name] [aws_id]
+```
 
-Push image:
-```docker push [aws_account_id].dkr.ecr.us-east-1.amazonaws.com/get_publications:latest```
+## Deploy `upload_image` lambda
+Just copy the code into the AWS Lambda IDE and set the `BUCKET_NAME` environment variable.
