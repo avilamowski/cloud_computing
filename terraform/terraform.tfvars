@@ -15,12 +15,19 @@ vpc = {
 
 
 s3_buckets = {
-  "soul-pupils-spa": {
-    website     = true
-    versioning  = false
-  }, 
-  "uploaded-images": {
-    website     = false
-    versioning  = true
+  "soul-pupils-spa" : {
+    website    = true
+    versioning = false
+  },
+  "uploaded-images" : {
+    website    = false
+    versioning = true
   }
+}
+
+rds = {
+  db_name     = "bd-sql"
+  db_username = "postgres"
+  db_password = "12345678"
+  db_port     = 5432
 }

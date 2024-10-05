@@ -11,7 +11,16 @@ variable "vpc" {
 
 variable "s3_buckets" {
   type = map(object({
-    website = bool
+    website    = bool
     versioning = bool
   }))
+}
+
+variable "rds" {
+  type = object({
+    db_name     = string
+    db_username = string
+    db_password = string
+    db_port     = number
+  })
 }
