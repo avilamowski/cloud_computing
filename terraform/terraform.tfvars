@@ -26,7 +26,7 @@ s3_buckets = {
 }
 
 rds = {
-  db_name     = "bd-sql"
+  db_name     = "bdsql"
   db_username = "postgres"
   db_password = "12345678"
   db_port     = 5432
