@@ -1,13 +1,21 @@
+resource "aws_db_subnet_group" "default_subnet_group" {
+  name       = "default_subnet_group"
+  subnet_ids = module.vpc.private_subnets
+}
+
 resource "aws_db_instance" "default" {
-  allocated_storage = 20
-  db_name           = var.rds.db_name
-  engine            = "postgres"
-  engine_version    = "16.3"
-  instance_class    = "db.t4g.micro"
-  username          = var.rds.db_username
-  password          = var.rds.db_password
-  availability_zone = "us-east-1a"
-  multi_az          = false
+  allocated_storage      = 20
+  db_name                = var.rds.db_name
+  engine                 = "postgres"
+  engine_version         = "16.3"
+  instance_class         = "db.t4g.micro"
+  username               = var.rds.db_username
+  password               = var.rds.db_password
+  availability_zone      = "us-east-1a"
+  multi_az               = false
+  publicly_accessible    = false
+  db_subnet_group_name   = aws_db_subnet_group.default_subnet_group.name
+  vpc_security_group_ids = [aws_security_group.bd_sg.id]
 }
 
 module "rds_proxy" {
@@ -55,7 +63,7 @@ module "rds_proxy" {
 
 
 resource "aws_secretsmanager_secret" "db_credentials" {
-  name        = "db_credentials"
+  name        = "db_credentials1"
   description = "RDS database credentials"
 }
 
@@ -86,15 +94,15 @@ resource "aws_vpc_security_group_ingress_rule" "bd_sg_ingress" {
   referenced_security_group_id = aws_security_group.proxy_sg.id
 }
 
-# resource "aws_vpc_security_group_ingress_rule" "proxy_sg_ingress" {
-#   security_group_id            = aws_security_group.proxy_sg.id
-#   from_port                    = 5432
-#   to_port                      = 5432
-#   ip_protocol                  = "tcp"
-#   referenced_security_group_id = aws_security_group.lambda.id
-# }
+resource "aws_vpc_security_group_ingress_rule" "proxy_sg_ingress" {
+  security_group_id            = aws_security_group.proxy_sg.id
+  from_port                    = 5432
+  to_port                      = 5432
+  ip_protocol                  = "tcp"
+  referenced_security_group_id = aws_security_group.lambda.id
+}
 
-resource "aws_vpc_security_group_ingress_rule" "proxy_sg_egress" {
+resource "aws_vpc_security_group_egress_rule" "proxy_sg_egress" {
   security_group_id            = aws_security_group.proxy_sg.id
   from_port                    = 5432
   to_port                      = 5432
