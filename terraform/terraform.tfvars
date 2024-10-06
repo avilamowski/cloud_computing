@@ -23,4 +23,4 @@ rds = {
   db_port     = 5432
 }
 
-lambda_names = ["get_publications", "get_comments", "create_publication", "create_comment"]
+lambda_names = ["get_publications", "get_comments", "create_publication", "create_comment", "init_db"]

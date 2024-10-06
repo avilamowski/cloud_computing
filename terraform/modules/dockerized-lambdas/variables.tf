@@ -8,11 +8,11 @@ variable "lambda_subnets" {
 
 variable "lambda_env_vars" {
   type = object({
-    DB_HOST = string
-    DB_NAME = string
-    DB_USER = string
-    DB_PASS = string
-    DB_PORT = string
+    DB_HOST     = string
+    DB_NAME     = string
+    DB_USER     = string
+    DB_PASSWORD = string
+    DB_PORT     = string
   })
 }
 

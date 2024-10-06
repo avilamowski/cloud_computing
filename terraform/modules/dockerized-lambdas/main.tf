@@ -11,7 +11,8 @@ resource "aws_ecr_repository" "repository" {
 
 
 resource "aws_lambda_function" "this" {
-  for_each = toset(var.lambda_names)
+  depends_on = [terraform_data.deploy_images]
+  for_each   = toset(var.lambda_names)
 
   function_name = each.key
   timeout       = 60
@@ -33,6 +34,11 @@ resource "terraform_data" "deploy_images" {
 
   provisioner "local-exec" {
     command = "${path.cwd}/deploy_all.sh ${var.lambda_aws_account_id}"
+  }
+  triggers_replace = {
+    lambdas : var.lambda_names
+    env : var.lambda_env_vars
+    # TODO: Hash?
   }
 }
 

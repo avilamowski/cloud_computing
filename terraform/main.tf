@@ -13,11 +13,11 @@ locals {
   subnet_ids  = module.vpc.private_subnets
   lambda_role = data.aws_iam_role.lab_role
   lambda_env_vars = {
-    DB_HOST = module.rds_proxy.proxy_endpoint
-    DB_NAME = var.rds.db_name
-    DB_USER = var.rds.db_username
-    DB_PASS = var.rds.db_password
-    DB_PORT = var.rds.db_port
+    DB_HOST     = module.rds_proxy.proxy_endpoint
+    DB_NAME     = var.rds.db_name
+    DB_USER     = var.rds.db_username
+    DB_PASSWORD = var.rds.db_password
+    DB_PORT     = var.rds.db_port
   }
 }
 
