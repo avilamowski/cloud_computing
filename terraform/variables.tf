@@ -1,11 +1,8 @@
 variable "vpc" {
   type = object({
-    vpc_cidr = string
-    vpc_name = string
-    subnets = list(object({
-      name       = string
-      cidr_block = string
-    }))
+    vpc_cidr     = string
+    vpc_name     = string
+    subnet_names = list(string)
   })
 }
 
@@ -23,4 +20,8 @@ variable "rds" {
     db_password = string
     db_port     = number
   })
+}
+
+variable "lambda_names" {
+  type = list(string)
 }

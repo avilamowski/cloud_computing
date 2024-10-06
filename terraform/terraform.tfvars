@@ -1,16 +1,7 @@
 vpc = {
-  vpc_cidr = "18.0.0.0/16"
-  vpc_name = "tp-vpc"
-  subnets = [
-    {
-      name       = "backend1"
-      cidr_block = "18.0.0.0/24"
-    },
-    {
-      name       = "backend2"
-      cidr_block = "18.0.1.0/24"
-    }
-  ]
+  vpc_cidr     = "18.0.0.0/16"
+  vpc_name     = "tp-vpc"
+  subnet_names = ["backend1", "backend2"]
 }
 
 
@@ -31,3 +22,5 @@ rds = {
   db_password = "12345678"
   db_port     = 5432
 }
+
+lambda_names = ["get_publications", "get_comments", "create_publication", "create_comment"]

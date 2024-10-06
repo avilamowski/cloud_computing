@@ -99,7 +99,7 @@ resource "aws_vpc_security_group_ingress_rule" "proxy_sg_ingress" {
   from_port                    = 5432
   to_port                      = 5432
   ip_protocol                  = "tcp"
-  referenced_security_group_id = aws_security_group.lambda.id
+  referenced_security_group_id = module.dockerized_lambdas.lambda_sg.id
 }
 
 resource "aws_vpc_security_group_egress_rule" "proxy_sg_egress" {
