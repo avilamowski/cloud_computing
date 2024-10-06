@@ -23,3 +23,7 @@ variable "lambda_vpc_id" {
 variable "lambda_role_arn" {
   type = string
 }
+
+variable "lambda_aws_account_id" {
+  type = string
+}

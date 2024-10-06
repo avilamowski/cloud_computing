@@ -15,7 +15,7 @@ resource "aws_lambda_function" "this" {
 
   function_name = each.key
   timeout       = 60
-  image_uri     = aws_ecr_repository.repository[each.key].repository_url
+  image_uri     = "${aws_ecr_repository.repository[each.key].repository_url}:latest"
   package_type  = "Image"
   architectures = ["x86_64"]
   vpc_config {
@@ -32,7 +32,7 @@ resource "terraform_data" "deploy_images" {
   depends_on = [aws_ecr_repository.repository]
 
   provisioner "local-exec" {
-    command = "../backend/deploy_all.sh"
+    command = "${path.cwd}/deploy_all.sh ${var.lambda_aws_account_id}"
   }
 }
 

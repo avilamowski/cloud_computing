@@ -16,6 +16,7 @@ resource "aws_db_instance" "default" {
   publicly_accessible    = false
   db_subnet_group_name   = aws_db_subnet_group.default_subnet_group.name
   vpc_security_group_ids = [aws_security_group.bd_sg.id]
+  skip_final_snapshot    = true
 }
 
 module "rds_proxy" {
@@ -63,7 +64,7 @@ module "rds_proxy" {
 
 
 resource "aws_secretsmanager_secret" "db_credentials" {
-  name        = "db_credentials1"
+  name        = "db_credentials3"
   description = "RDS database credentials"
 }
 
