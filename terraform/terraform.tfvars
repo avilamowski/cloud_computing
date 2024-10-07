@@ -24,3 +24,47 @@ rds = {
 }
 
 lambda_names = ["get_publications", "get_comments", "create_publication", "create_comment", "init_db"]
+
+api_endpoints = [
+  {
+    name                 = "get_publications"
+    method               = "GET"
+    path                 = "/publications"
+    authorization_scopes = []
+  },
+
+  {
+    name                 = "get_comments"
+    method               = "GET"
+    path                 = "/comments"
+    authorization_scopes = []
+  },
+  {
+    name                 = "create_publication"
+    method               = "POST"
+    path                 = "/publications"
+    authorization_scopes = []
+  },
+
+  {
+    name                 = "create_comment"
+    method               = "POST"
+    path                 = "/comments"
+    authorization_scopes = []
+  },
+
+  {
+    name                 = "init_db"
+    method               = "POST"
+    path                 = "/init_db"
+    authorization_scopes = []
+  },
+
+  {
+    name                 = "upload_image"
+    method               = "POST"
+    path                 = "/upload_image"
+    authorization_scopes = []
+  }
+
+]

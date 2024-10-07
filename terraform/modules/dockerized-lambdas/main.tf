@@ -38,7 +38,7 @@ resource "terraform_data" "deploy_images" {
   triggers_replace = {
     lambdas : var.lambda_names
     env : var.lambda_env_vars
-    # TODO: Hash?
+    always_run = "${timestamp()}" # TODO: Check hash?
   }
 }
 

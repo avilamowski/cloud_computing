@@ -7,7 +7,7 @@ resource "terraform_data" "zip_lambda" {
   }
 }
 
-resource "aws_lambda_function" "this" {
+resource "aws_lambda_function" "upload_file_lambda" {
   depends_on = [terraform_data.zip_lambda]
 
   function_name = "upload_image"

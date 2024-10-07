@@ -40,3 +40,53 @@ resource "aws_vpc_security_group_egress_rule" "lambda_sg_egress" {
   ip_protocol                  = "tcp"
   referenced_security_group_id = aws_security_group.proxy_sg.id
 }
+
+resource "aws_apigatewayv2_api" "api_gateway" {
+  name          = "sp-api-gw"
+  description   = "API Gateway for Soul Pupils"
+  protocol_type = "HTTP"
+
+  cors_configuration {
+    allow_methods = ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"]
+    allow_headers = ["*"]
+    allow_origins = ["*"]
+  }
+}
+
+locals {
+  private_lambdas = module.dockerized_lambdas.lambdas
+  regional_lambdas = {
+    (aws_lambda_function.upload_file_lambda.function_name) = aws_lambda_function.upload_file_lambda
+  }
+
+  all_lambdas = merge(local.private_lambdas, local.regional_lambdas)
+}
+
+
+resource "aws_apigatewayv2_integration" "api_integration" {
+  depends_on         = [aws_apigatewayv2_api.api_gateway]
+  for_each           = { for endpoint in var.api_endpoints : endpoint.name => endpoint }
+  api_id             = aws_apigatewayv2_api.api_gateway.id
+  integration_type   = "AWS_PROXY"
+  integration_method = "POST"
+  integration_uri    = local.all_lambdas[each.value.name].invoke_arn
+}
+
+resource "aws_apigatewayv2_route" "api_route" {
+  depends_on = [aws_apigatewayv2_api.api_gateway, aws_apigatewayv2_integration.api_integration]
+  for_each   = { for endpoint in var.api_endpoints : endpoint.name => endpoint }
+  api_id     = aws_apigatewayv2_api.api_gateway.id
+  route_key  = "${each.value.method} ${each.value.path}"
+  target     = "integrations/${aws_apigatewayv2_integration.api_integration[each.value.name].id}"
+}
+
+resource "aws_apigatewayv2_stage" "api_stage" {
+  depends_on  = [aws_apigatewayv2_route.api_route]
+  api_id      = aws_apigatewayv2_api.api_gateway.id
+  name        = "dev"
+  auto_deploy = true
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+

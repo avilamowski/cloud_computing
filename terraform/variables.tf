@@ -25,3 +25,13 @@ variable "rds" {
 variable "lambda_names" {
   type = list(string)
 }
+
+variable "api_endpoints" {
+  type = list(object({
+    name               = string
+    method             = string
+    path               = string
+    authorization_scopes = list(string)
+  }))
+}
+
