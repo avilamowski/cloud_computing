@@ -29,36 +29,30 @@ api_endpoints = [
   {
     name                 = "get_publications"
     method               = "GET"
-    path                 = "/publications"
+    path                 = "/get_publications"
     authorization_scopes = []
   },
 
   {
     name                 = "get_comments"
     method               = "GET"
-    path                 = "/comments"
+    path                 = "/get_comments"
     authorization_scopes = []
   },
   {
     name                 = "create_publication"
     method               = "POST"
-    path                 = "/publications"
+    path                 = "/create_publication"
     authorization_scopes = []
   },
 
   {
     name                 = "create_comment"
     method               = "POST"
-    path                 = "/comments"
+    path                 = "/create_comment"
     authorization_scopes = []
   },
 
-  {
-    name                 = "init_db"
-    method               = "POST"
-    path                 = "/init_db"
-    authorization_scopes = []
-  },
 
   {
     name                 = "upload_image"

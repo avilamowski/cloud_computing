@@ -62,7 +62,6 @@ locals {
   all_lambdas = merge(local.private_lambdas, local.regional_lambdas)
 }
 
-
 resource "aws_apigatewayv2_integration" "api_integration" {
   depends_on         = [aws_apigatewayv2_api.api_gateway]
   for_each           = { for endpoint in var.api_endpoints : endpoint.name => endpoint }
@@ -70,6 +69,16 @@ resource "aws_apigatewayv2_integration" "api_integration" {
   integration_type   = "AWS_PROXY"
   integration_method = "POST"
   integration_uri    = local.all_lambdas[each.value.name].invoke_arn
+}
+
+resource "aws_lambda_permission" "apigw_lambda" {
+  depends_on    = [aws_apigatewayv2_integration.api_integration]
+  for_each      = { for endpoint in var.api_endpoints : endpoint.name => endpoint }
+  statement_id  = each.value.name
+  action        = "lambda:InvokeFunction"
+  function_name = each.value.name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.api_gateway.execution_arn}/*/*/${each.value.name}"
 }
 
 resource "aws_apigatewayv2_route" "api_route" {

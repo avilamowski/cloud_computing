@@ -1,13 +1,14 @@
 locals {
   frontend_bucket_name = module.s3["soul-pupils-spa"].bucket_name
   api_endpoint         = aws_apigatewayv2_api.api_gateway.api_endpoint
+  stage                = aws_apigatewayv2_stage.api_stage.name
 }
 
 resource "terraform_data" "upload_build" {
   depends_on = [module.s3, aws_apigatewayv2_api.api_gateway]
 
   provisioner "local-exec" {
-    command = "${path.cwd}/scripts/deploy_frontend.sh ${local.frontend_bucket_name} ${local.api_endpoint}"
+    command = "${path.cwd}/scripts/deploy_frontend.sh ${local.frontend_bucket_name} ${local.api_endpoint}/${local.stage}"
   }
 
   triggers_replace = {
