@@ -23,7 +23,7 @@ rds = {
   db_port     = 5432
 }
 
-lambda_names = ["get_publications", "get_comments", "create_publication", "create_comment", "init_db"]
+lambda_names = ["get_publications", "get_comments", "create_publication", "create_comment", "init_db", "create_user"]
 
 api_endpoints = [
   {

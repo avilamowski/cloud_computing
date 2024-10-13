@@ -57,6 +57,7 @@ locals {
   private_lambdas = module.dockerized_lambdas.lambdas
   regional_lambdas = {
     (aws_lambda_function.upload_image_lambda.function_name) = aws_lambda_function.upload_image_lambda
+    (aws_lambda_function.redirect.function_name)            = aws_lambda_function.redirect
   }
 
   all_lambdas = merge(local.private_lambdas, local.regional_lambdas)
@@ -80,11 +81,26 @@ resource "aws_lambda_permission" "apigw_lambda" {
   source_arn    = "${aws_apigatewayv2_api.api_gateway.execution_arn}/*/*/${each.value.name}"
 }
 
+resource "aws_apigatewayv2_authorizer" "soul-pupils" {
+  api_id           = aws_apigatewayv2_api.api_gateway.id
+  name             = "soul-pupils-authorizer"
+  authorizer_type  = "JWT"
+  identity_sources = ["$request.header.Authorization"]
+
+  jwt_configuration {
+    audience = [aws_cognito_user_pool_client.userpool_client.id]
+    issuer   = format("%s%s", "https://", aws_cognito_user_pool.soul-pupils.endpoint)
+  }
+}
+
 resource "aws_apigatewayv2_route" "api_route" {
-  for_each  = { for endpoint in var.api_endpoints : endpoint.name => endpoint }
-  api_id    = aws_apigatewayv2_api.api_gateway.id
-  route_key = "${each.value.method} ${each.value.path}"
-  target    = "integrations/${aws_apigatewayv2_integration.api_integration[each.value.name].id}"
+  for_each             = { for endpoint in var.api_endpoints : endpoint.name => endpoint }
+  api_id               = aws_apigatewayv2_api.api_gateway.id
+  route_key            = "${each.value.method} ${each.value.path}"
+  target               = "integrations/${aws_apigatewayv2_integration.api_integration[each.value.name].id}"
+  authorizer_id        = aws_apigatewayv2_authorizer.soul-pupils.id
+  authorization_type   = "JWT"
+  authorization_scopes = each.value.authorization_scopes
 }
 
 resource "aws_apigatewayv2_stage" "api_stage" {

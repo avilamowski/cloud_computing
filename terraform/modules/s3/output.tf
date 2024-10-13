@@ -10,3 +10,7 @@ output "bucket_id" {
 output "bucket_arn" {
   value = aws_s3_bucket.this.arn
 }
+
+output "frontend_endpoint" {
+  value = aws_s3_bucket.this.website_endpoint
+}
