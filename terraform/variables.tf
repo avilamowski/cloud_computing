@@ -1,8 +1,8 @@
 variable "vpc" {
   type = object({
-    vpc_cidr     = string
-    vpc_name     = string
-    subnet_names = list(string)
+    vpc_cidr             = string
+    vpc_name             = string
+    private_subnet_names = list(string)
   })
 }
 
@@ -28,9 +28,9 @@ variable "lambda_names" {
 
 variable "api_endpoints" {
   type = list(object({
-    name               = string
-    method             = string
-    path               = string
+    name                 = string
+    method               = string
+    path                 = string
     authorization_scopes = list(string)
   }))
 }

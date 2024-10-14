@@ -10,7 +10,7 @@ module "s3" {
 
 locals {
   vpc_id      = module.vpc.vpc_id
-  subnet_ids  = module.vpc.private_subnets
+  subnet_ids  = slice(module.vpc.private_subnets, 0, 2) # First two private subnets are for lambdas
   lambda_role = data.aws_iam_role.lab_role
   lambda_env_vars = {
     DB_HOST     = module.rds_proxy.proxy_endpoint
@@ -56,14 +56,13 @@ resource "aws_apigatewayv2_api" "api_gateway" {
 locals {
   private_lambdas = module.dockerized_lambdas.lambdas
   regional_lambdas = {
-    (aws_lambda_function.upload_file_lambda.function_name) = aws_lambda_function.upload_file_lambda
+    (aws_lambda_function.upload_image_lambda.function_name) = aws_lambda_function.upload_image_lambda
   }
 
   all_lambdas = merge(local.private_lambdas, local.regional_lambdas)
 }
 
 resource "aws_apigatewayv2_integration" "api_integration" {
-  depends_on         = [aws_apigatewayv2_api.api_gateway]
   for_each           = { for endpoint in var.api_endpoints : endpoint.name => endpoint }
   api_id             = aws_apigatewayv2_api.api_gateway.id
   integration_type   = "AWS_PROXY"
@@ -82,11 +81,10 @@ resource "aws_lambda_permission" "apigw_lambda" {
 }
 
 resource "aws_apigatewayv2_route" "api_route" {
-  depends_on = [aws_apigatewayv2_api.api_gateway, aws_apigatewayv2_integration.api_integration]
-  for_each   = { for endpoint in var.api_endpoints : endpoint.name => endpoint }
-  api_id     = aws_apigatewayv2_api.api_gateway.id
-  route_key  = "${each.value.method} ${each.value.path}"
-  target     = "integrations/${aws_apigatewayv2_integration.api_integration[each.value.name].id}"
+  for_each  = { for endpoint in var.api_endpoints : endpoint.name => endpoint }
+  api_id    = aws_apigatewayv2_api.api_gateway.id
+  route_key = "${each.value.method} ${each.value.path}"
+  target    = "integrations/${aws_apigatewayv2_integration.api_integration[each.value.name].id}"
 }
 
 resource "aws_apigatewayv2_stage" "api_stage" {

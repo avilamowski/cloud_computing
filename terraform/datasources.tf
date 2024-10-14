@@ -9,3 +9,9 @@ data "aws_region" "current" {}
 data "aws_iam_role" "lab_role" {
   name = "LabRole"
 }
+
+data "archive_file" "lambda_upload_image" {
+  type        = "zip"
+  source_file = "${path.cwd}/../backend/upload_image.py"
+  output_path = "${path.cwd}/lambda_upload_image.zip"
+}

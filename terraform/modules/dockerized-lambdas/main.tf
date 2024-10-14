@@ -33,7 +33,8 @@ resource "terraform_data" "deploy_images" {
   depends_on = [aws_ecr_repository.repository]
 
   provisioner "local-exec" {
-    command = "${path.cwd}/deploy_all.sh ${var.lambda_aws_account_id}"
+    working_dir = "${path.cwd}/scripts"
+    command     = "${path.cwd}/scripts/deploy_all.sh ${var.lambda_aws_account_id}"
   }
   triggers_replace = {
     lambdas : var.lambda_names
@@ -46,9 +47,9 @@ resource "aws_security_group" "lambda_sg" {
   vpc_id = var.lambda_vpc_id
   name   = "lambda_sg"
   ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }

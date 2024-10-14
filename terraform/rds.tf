@@ -1,6 +1,7 @@
-resource "aws_db_subnet_group" "default_subnet_group" {
-  name       = "default_subnet_group"
-  subnet_ids = module.vpc.private_subnets
+resource "aws_db_subnet_group" "db_subnet_group" {
+  depends_on = [module.vpc]
+  name       = "db_subnet_group"
+  subnet_ids = slice(module.vpc.private_subnets, 2, 4)
 }
 
 resource "aws_db_instance" "default" {
@@ -14,14 +15,13 @@ resource "aws_db_instance" "default" {
   availability_zone      = "us-east-1a"
   multi_az               = false
   publicly_accessible    = false
-  db_subnet_group_name   = aws_db_subnet_group.default_subnet_group.name
+  db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
   vpc_security_group_ids = [aws_security_group.bd_sg.id]
   skip_final_snapshot    = true
 }
 
 module "rds_proxy" {
   source = "terraform-aws-modules/rds-proxy/aws"
-
 
   name                   = "bd-sql-proxy"
   create_iam_role        = false
@@ -59,13 +59,11 @@ module "rds_proxy" {
 
   target_db_instance     = true
   db_instance_identifier = aws_db_instance.default.identifier
-
-  depends_on = [aws_db_instance.default]
 }
 
 
 resource "aws_secretsmanager_secret" "db_credentials" {
-  name        = "db_credentials3"
+  name        = "db_credentials6"
   description = "RDS database credentials"
 }
 
