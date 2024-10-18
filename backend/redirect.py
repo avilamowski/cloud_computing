@@ -6,6 +6,6 @@ def lambda_handler(event, context):
     return {
         'statusCode': '302',
         'headers': {
-            'Location': "http://" + os.environ['frontend_url'] + '?' + event.get('rawQueryString', ''),
+            'Location': f"http://{os.environ['frontend_url']}/callback?{event.get('rawQueryString', '')}"
         },
     }

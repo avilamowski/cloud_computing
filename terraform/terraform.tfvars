@@ -59,5 +59,12 @@ api_endpoints = [
     method               = "POST"
     path                 = "/upload_image"
     authorization_scopes = []
+  },
+
+  {
+    name                 = "create_user"
+    method               = "POST"
+    path                 = "/create_user"
+    authorization_scopes = []
   }
 ]

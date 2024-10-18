@@ -1,5 +1,6 @@
 <script>
 	import { page } from '$app/stores';
+	import { getSignInUrl, getRegisterUrl } from '$lib/api'
 </script>
 
 <nav class="navbar navbar-light">
@@ -29,17 +30,17 @@
 					</a>
 				</li>
 			{:else}
-				<!-- <li class="nav-item">
-					<a href="/login" class="nav-link" class:active={$page.url.pathname === '/login'}>
+				<li class="nav-item">
+					<a href={getSignInUrl()} class="nav-link" class:active={$page.url.pathname === '/login'}>
 						Sign in
 					</a>
 				</li>
 
 				<li class="nav-item">
-					<a href="/register" class="nav-link" class:active={$page.url.pathname === '/register'}>
+					<a href={getRegisterUrl()} class="nav-link" class:active={$page.url.pathname === '/register'}>
 						Sign up
 					</a>
-				</li> -->
+				</li>
 			{/if}
 		</ul>
 	</div>

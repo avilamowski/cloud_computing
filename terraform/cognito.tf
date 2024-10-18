@@ -36,10 +36,10 @@ resource "aws_cognito_user_pool_domain" "soul-pupils" {
 resource "aws_cognito_user_pool_client" "userpool_client" {
   name                                 = "soul-pupils-client"
   user_pool_id                         = aws_cognito_user_pool.soul-pupils.id
-  callback_urls                        = [aws_lambda_function_url.redirect.function_url]
+  callback_urls                        = ["${aws_lambda_function_url.redirect.function_url}", "http://localhost:5173/callback"]
   allowed_oauth_flows_user_pool_client = true
   allowed_oauth_flows                  = ["code"]
-  allowed_oauth_scopes                 = ["email"]
+  allowed_oauth_scopes                 = ["email", "openid"]
   supported_identity_providers         = ["COGNITO"]
 
   access_token_validity  = 1
@@ -69,7 +69,7 @@ resource "aws_lambda_function" "redirect" {
 
   function_name = "redirect"
   timeout       = 60
-  filename      = "${path.cwd}/redirect.zip"
+  filename      = "${path.cwd}/lambda_redirect.zip"
   handler       = "redirect.lambda_handler"
   #   source_code_hash = filebase64sha256("${path.cwd}/lambda_redirect.zip")
   runtime       = "python3.11"
