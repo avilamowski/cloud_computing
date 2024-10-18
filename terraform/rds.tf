@@ -112,3 +112,9 @@ resource "aws_vpc_security_group_egress_rule" "proxy_sg_egress" {
   ip_protocol                  = "tcp"
   referenced_security_group_id = aws_security_group.bd_sg.id
 }
+
+resource "aws_lambda_invocation" "init_db_invoke" {
+  function_name = module.dockerized_lambdas.lambdas["init_db"].function_name
+  depends_on    = [module.rds_proxy]
+  input         = jsonencode({})
+}
