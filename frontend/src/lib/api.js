@@ -19,7 +19,7 @@ async function send({ method, path, data}) {
 
   const token = localStorage.getItem("token");
   if (token) {
-    opts.headers["Authorization"] = `Token ${token}`;
+    opts.headers["Authorization"] = `Bearer ${token}`;
   }
 
   isLoading.set(true);
