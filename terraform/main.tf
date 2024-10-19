@@ -97,8 +97,8 @@ resource "aws_apigatewayv2_route" "api_route" {
   api_id               = aws_apigatewayv2_api.api_gateway.id
   route_key            = "${each.value.method} ${each.value.path}"
   target               = "integrations/${aws_apigatewayv2_integration.api_integration[each.value.name].id}"
-  authorizer_id        = aws_apigatewayv2_authorizer.soul-pupils.id
-  authorization_type   = "JWT"
+  authorizer_id        = each.value.require_authorization ? aws_apigatewayv2_authorizer.soul-pupils.id : null
+  authorization_type   = each.value.require_authorization ? "JWT" : null
   authorization_scopes = each.value.authorization_scopes
 }
 

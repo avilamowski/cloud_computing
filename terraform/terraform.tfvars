@@ -27,44 +27,50 @@ lambda_names = ["get_publications", "get_comments", "create_publication", "creat
 
 api_endpoints = [
   {
-    name                 = "get_publications"
-    method               = "GET"
-    path                 = "/get_publications"
-    authorization_scopes = []
+    name                  = "get_publications"
+    method                = "GET"
+    path                  = "/get_publications"
+    require_authorization = false
+    authorization_scopes  = []
   },
 
   {
-    name                 = "get_comments"
-    method               = "GET"
-    path                 = "/get_comments"
-    authorization_scopes = []
+    name                  = "get_comments"
+    method                = "GET"
+    path                  = "/get_comments"
+    require_authorization = false
+    authorization_scopes  = []
   },
   {
-    name                 = "create_publication"
-    method               = "POST"
-    path                 = "/create_publication"
-    authorization_scopes = []
-  },
-
-  {
-    name                 = "create_comment"
-    method               = "POST"
-    path                 = "/create_comment"
-    authorization_scopes = []
-  },
-
-
-  {
-    name                 = "upload_image"
-    method               = "POST"
-    path                 = "/upload_image"
-    authorization_scopes = []
+    name                  = "create_publication"
+    method                = "POST"
+    path                  = "/create_publication"
+    require_authorization = true
+    authorization_scopes  = []
   },
 
   {
-    name                 = "create_user"
-    method               = "POST"
-    path                 = "/create_user"
-    authorization_scopes = []
+    name                  = "create_comment"
+    method                = "POST"
+    path                  = "/create_comment"
+    require_authorization = true
+    authorization_scopes  = []
+  },
+
+
+  {
+    name                  = "upload_image"
+    method                = "POST"
+    path                  = "/upload_image"
+    require_authorization = true
+    authorization_scopes  = []
+  },
+
+  {
+    name                  = "create_user"
+    method                = "POST"
+    path                  = "/create_user"
+    require_authorization = false
+    authorization_scopes  = []
   }
 ]

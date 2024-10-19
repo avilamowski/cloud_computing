@@ -28,10 +28,11 @@ variable "lambda_names" {
 
 variable "api_endpoints" {
   type = list(object({
-    name                 = string
-    method               = string
-    path                 = string
-    authorization_scopes = list(string)
+    name                  = string
+    method                = string
+    path                  = string
+    require_authorization = bool
+    authorization_scopes  = list(string)
   }))
 }
 
