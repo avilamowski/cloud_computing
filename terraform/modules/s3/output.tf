@@ -12,5 +12,5 @@ output "bucket_arn" {
 }
 
 output "frontend_endpoint" {
-  value = aws_s3_bucket.this.website_endpoint
+  value = var.s3_is_website ? aws_s3_bucket_website_configuration.this[0].website_endpoint : null
 }
