@@ -18,12 +18,11 @@ def lambda_handler(event, context):
         content = data.get('content')
         claims = event['requestContext']['authorizer']['claims']
         email = claims['email']
-        username = claims['email'] # TODO: claims['username'] 
 
-        if not title or not content or not username or not email:
+        if not title or not content or not email:
             return {
                 'statusCode': 400,
-                'body': json.dumps({'error': 'title, content and username are required'})
+                'body': json.dumps({'error': 'title, content are required'})
             }
 
         user = session.query(User).filter_by(email=email).first()

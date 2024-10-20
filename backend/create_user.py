@@ -10,15 +10,16 @@ logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     session = get_session()
-    logger.info(event)
+    # logger.info(event)
 
     try:
         email = event.get('request').get('userAttributes').get('email')
+        username = event.get('request').get('userAttributes').get('preferred_username') 
         
         try:
             user = User(
                 user_id=str(uuid.uuid4()),
-                username=email,
+                username=username,
                 email=email
             )
             session.add(user)
@@ -33,7 +34,13 @@ def lambda_handler(event, context):
         logger.info(f'User: {user.user_id}')
         session.close()
 
-        return event
+        return {
+            'statusCode': 201,
+            'body': json.dumps({
+                'message': 'User created successfully',
+                'user_id': user.user_id
+            })
+        }
 
     except Exception as e:
         session.close()

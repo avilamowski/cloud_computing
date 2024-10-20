@@ -11,6 +11,20 @@ resource "aws_cognito_user_pool" "soul-pupils" {
 
   username_attributes = ["email"]
 
+  schema {
+    name                = "email"
+    attribute_data_type = "String"
+    mutable             = true
+    required            = true
+  }
+
+  schema {
+    name                = "preferred_username"
+    attribute_data_type = "String"
+    mutable             = true
+    required            = true
+  }
+
   lambda_config {
     post_confirmation = module.dockerized_lambdas.lambdas["create_user"].arn
   }
