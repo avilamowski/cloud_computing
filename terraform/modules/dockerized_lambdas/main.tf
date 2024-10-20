@@ -11,8 +11,7 @@ resource "aws_ecr_repository" "repository" {
 
 
 resource "aws_lambda_function" "this" {
-  depends_on = [terraform_data.deploy_images]
-  for_each   = toset(var.lambda_names)
+  for_each = toset(var.lambda_names)
 
   function_name = each.key
   timeout       = 60
@@ -26,11 +25,12 @@ resource "aws_lambda_function" "this" {
   environment {
     variables = var.lambda_env_vars
   }
-  role = var.lambda_role_arn
+  role       = var.lambda_role_arn
+  depends_on = [terraform_data.deploy_images]
+
 }
 
 resource "terraform_data" "deploy_images" {
-  depends_on = [aws_ecr_repository.repository]
 
   provisioner "local-exec" {
     working_dir = "${path.cwd}/scripts"
@@ -39,6 +39,8 @@ resource "terraform_data" "deploy_images" {
   triggers_replace = {
     always_run = "${timestamp()}"
   }
+  depends_on = [aws_ecr_repository.repository]
+
 }
 
 resource "aws_security_group" "lambda_sg" {

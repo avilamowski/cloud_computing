@@ -39,13 +39,12 @@ resource "aws_s3_bucket_ownership_controls" "this" {
 }
 
 resource "aws_s3_bucket_acl" "example" {
+  bucket = aws_s3_bucket.this.bucket
+  acl    = "public-read"
   depends_on = [
     aws_s3_bucket_ownership_controls.this,
     aws_s3_bucket_public_access_block.this,
   ]
-
-  bucket = aws_s3_bucket.this.bucket
-  acl    = "public-read"
 }
 
 resource "aws_s3_bucket_policy" "this" {

@@ -22,7 +22,11 @@ variable "rds" {
   })
 }
 
-variable "lambda_names" {
+variable "dockerized_lambda_names" {
+  type = list(string)
+}
+
+variable "zipped_lambdas" {
   type = list(string)
 }
 
@@ -35,4 +39,3 @@ variable "api_endpoints" {
     authorization_scopes  = list(string)
   }))
 }
-

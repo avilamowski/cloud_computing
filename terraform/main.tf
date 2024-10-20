@@ -21,24 +21,50 @@ locals {
 }
 
 module "dockerized_lambdas" {
-  source = "./modules/dockerized-lambdas"
+  source = "./modules/dockerized_lambdas"
 
   lambda_role_arn       = local.lambda_role.arn
   lambda_vpc_id         = local.vpc_id
-  lambda_names          = var.lambda_names
+  lambda_names          = var.dockerized_lambda_names
   lambda_subnets        = local.subnet_ids
   lambda_env_vars       = local.lambda_env_vars
   lambda_aws_account_id = data.aws_caller_identity.current.account_id
   lambda_region_name    = data.aws_region.current.name
 }
 
+
+locals {
+  environment_variables = {
+    upload_image = {
+      environment_variables = {
+        BUCKET_NAME = module.s3["uploaded-images"].bucket_name
+      }
+    }
+    redirect = {
+      environment_variables = {
+        "frontend_url" = module.s3["soul-pupils-spa"].frontend_endpoint
+      }
+    }
+  }
+}
+
+module "zipped_lambdas" {
+  source                = "./modules/zipped_lambdas"
+  for_each              = toset(var.zipped_lambdas)
+  lambda_name           = each.key
+  environment_variables = local.environment_variables[each.key]
+  lambda_role_arn       = data.aws_iam_role.lab_role.arn
+  source_code_hash      = data.archive_file.zipped_lambdas[each.key].output_base64sha256
+}
+
 resource "aws_vpc_security_group_egress_rule" "lambda_sg_egress" {
-  depends_on                   = [module.dockerized_lambdas]
   security_group_id            = module.dockerized_lambdas.lambda_sg.id
   from_port                    = 5432
   to_port                      = 5432
   ip_protocol                  = "tcp"
   referenced_security_group_id = aws_security_group.proxy_sg.id
+  depends_on                   = [module.dockerized_lambdas]
+
 }
 
 resource "aws_apigatewayv2_api" "api_gateway" {
@@ -53,11 +79,16 @@ resource "aws_apigatewayv2_api" "api_gateway" {
   }
 }
 
+
+
+
 locals {
-  private_lambdas = module.dockerized_lambdas.lambdas
+  redirect_lambda     = module.dockerized_lambdas["redirect"]
+  upload_image_lambda = module.dockerized_lambdas["upload_image_lambda"]
+  private_lambdas     = module.dockerized_lambdas.lambdas
   regional_lambdas = {
-    (aws_lambda_function.upload_image_lambda.function_name) = aws_lambda_function.upload_image_lambda
-    (aws_lambda_function.redirect.function_name)            = aws_lambda_function.redirect
+    (local.upload_image_lambda.function_name) = local.upload_image_lambda
+    (local.redirect_lambda.function_name)     = local.redirect_lambda
   }
 
   all_lambdas = merge(local.private_lambdas, local.regional_lambdas)
@@ -72,16 +103,17 @@ resource "aws_apigatewayv2_integration" "api_integration" {
 }
 
 resource "aws_lambda_permission" "apigw_lambda" {
-  depends_on    = [aws_apigatewayv2_integration.api_integration]
   for_each      = { for endpoint in var.api_endpoints : endpoint.name => endpoint }
   statement_id  = each.value.name
   action        = "lambda:InvokeFunction"
   function_name = each.value.name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.api_gateway.execution_arn}/*/*/${each.value.name}"
+  depends_on    = [aws_apigatewayv2_integration.api_integration]
+
 }
 
-resource "aws_apigatewayv2_authorizer" "soul-pupils" {
+resource "aws_apigatewayv2_authorizer" "soul_pupils" {
   api_id           = aws_apigatewayv2_api.api_gateway.id
   name             = "soul-pupils-authorizer"
   authorizer_type  = "JWT"
@@ -89,7 +121,7 @@ resource "aws_apigatewayv2_authorizer" "soul-pupils" {
 
   jwt_configuration {
     audience = [aws_cognito_user_pool_client.userpool_client.id]
-    issuer   = format("%s%s", "https://", aws_cognito_user_pool.soul-pupils.endpoint)
+    issuer   = format("%s%s", "https://", aws_cognito_user_pool.soul_pupils.endpoint)
   }
 }
 
@@ -98,18 +130,18 @@ resource "aws_apigatewayv2_route" "api_route" {
   api_id               = aws_apigatewayv2_api.api_gateway.id
   route_key            = "${each.value.method} ${each.value.path}"
   target               = "integrations/${aws_apigatewayv2_integration.api_integration[each.value.name].id}"
-  authorizer_id        = each.value.require_authorization ? aws_apigatewayv2_authorizer.soul-pupils.id : null
+  authorizer_id        = each.value.require_authorization ? aws_apigatewayv2_authorizer.soul_pupils.id : null
   authorization_type   = each.value.require_authorization ? "JWT" : null
   authorization_scopes = each.value.authorization_scopes
 }
 
 resource "aws_apigatewayv2_stage" "api_stage" {
-  depends_on  = [aws_apigatewayv2_route.api_route]
   api_id      = aws_apigatewayv2_api.api_gateway.id
   name        = "dev"
   auto_deploy = true
   lifecycle {
     create_before_destroy = true
   }
-}
+  depends_on = [aws_apigatewayv2_route.api_route]
 
+}

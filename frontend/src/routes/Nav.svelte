@@ -22,7 +22,7 @@
 			</li>
 
 			{#if isAuthenticated}
-				<li>
+				<li class="nav-item">
 					<a href={getSignOutUrl()} class="nav-link" class:active={$page.url.pathname === '/logout'} on:click={logout}>
 						Logout
 					</a>
