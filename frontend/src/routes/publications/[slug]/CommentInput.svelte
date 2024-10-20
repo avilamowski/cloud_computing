@@ -7,9 +7,7 @@
 		const data = new FormData(e.target);
 		dispatch('commentForm', {
 			comment: {
-				content: data.get('content'),
-				username: data.get('username'),
-				email: data.get('email')
+				content: data.get('content')
 			} 
 		});
 		e.target.reset();
@@ -21,14 +19,14 @@
 		
 		<h3 class="card-title">Post a comment</h3>
 
-		<div>
+		<!-- <div>
 			<label for="username">Username</label>
 			<input type="text" id="username" name="username" class="form-control" required />
 		</div>
 		<div>
 			<label for="email">Email</label>
 			<input type="email" id="email" name="email" class="form-control" required />
-		</div>
+		</div> -->
 		<textarea class="form-control" name="content" placeholder="Write a comment..." style="border: 1px solid #ccc; margin-top: 20px;" required></textarea>
 	</div>
 

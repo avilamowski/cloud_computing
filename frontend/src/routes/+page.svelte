@@ -113,8 +113,6 @@
 				{
 						title: data.get('title'),
 						content: data.get('content'),
-						username: data.get('username'),
-						email: data.get('email'),
 						// tagList: data.get('tagList').split(' ')
 
 				},
@@ -171,14 +169,6 @@
 								<span class="close" on:click={toggleModal} role="button" tabindex="0" aria-label="Close" aria-hidden="true" aria-controls="modal"> &times;</span>
 								<h2>Create New Publication</h2>
 								<form method="POST" action="?/createPublication" on:submit={createPublication}>
-									<div>
-										<label for="username">Username</label>
-										<input type="text" id="username" name="username" class="form-control" required />
-									</div>
-									<div>
-										<label for="email">Email</label>
-										<input type="email" id="email" name="email" class="form-control" required />
-									</div>
 									<div>
 										<label for="title">Title</label>
 										<input type="text" id="title" name="title" class="form-control" required />

@@ -16,8 +16,10 @@ def lambda_handler(event, context):
         data = json.loads(event['body'])
 
         content = data.get('content')
-        username = data.get('username')
-        email = data.get('email')
+        claims = event['requestContext']['authorizer']['claims']
+        email = claims['email']
+        username = claims['email'] # TODO: claims['username'] 
+
         publication_id = data.get('publication_id')
 
 

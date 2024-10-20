@@ -16,8 +16,9 @@ def lambda_handler(event, context):
         data = json.loads(event.get('body'))
         title = data.get('title')
         content = data.get('content')
-        username = data.get('username') # TODO: Only get user id in future implementation
-        email = data.get('email') # TODO: Only get user id in future implementation
+        claims = event['requestContext']['authorizer']['claims']
+        email = claims['email']
+        username = claims['email'] # TODO: claims['username'] 
 
         if not title or not content or not username or not email:
             return {
