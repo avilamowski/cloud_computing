@@ -1,7 +1,8 @@
 vpc = {
-  vpc_cidr             = "18.0.0.0/16"
-  vpc_name             = "tp-vpc"
-  private_subnet_names = ["backend1", "backend2", "db1", "db2"]
+  vpc_cidr              = "18.0.0.0/16"
+  vpc_name              = "tp-vpc"
+  private_subnet_names  = ["backend1", "backend2"]
+  database_subnet_names = ["database1", "database2"]
 }
 
 

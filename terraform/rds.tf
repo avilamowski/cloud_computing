@@ -1,7 +1,7 @@
 resource "aws_db_subnet_group" "db_subnet_group" {
   depends_on = [module.vpc]
   name       = "db_subnet_group"
-  subnet_ids = slice(module.vpc.private_subnets, 2, 4)
+  subnet_ids = module.vpc.database_subnets
 }
 
 resource "aws_db_instance" "default" {

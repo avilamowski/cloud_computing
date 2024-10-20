@@ -31,16 +31,9 @@ def lambda_handler(event, context):
                 'body': 'There was already a user with the same username or email'
             }
 
-        logger.info(f'User: {user.user_id}')
+        # logger.info(f'User: {user.user_id}')
         session.close()
-
-        return {
-            'statusCode': 201,
-            'body': json.dumps({
-                'message': 'User created successfully',
-                'user_id': user.user_id
-            })
-        }
+        return event
 
     except Exception as e:
         session.close()

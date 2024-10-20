@@ -1,8 +1,9 @@
 variable "vpc" {
   type = object({
-    vpc_cidr             = string
-    vpc_name             = string
-    private_subnet_names = list(string)
+    vpc_cidr              = string
+    vpc_name              = string
+    private_subnet_names  = list(string)
+    database_subnet_names = list(string)
   })
 }
 
