@@ -26,22 +26,13 @@ def lambda_handler(event, context):
                 'body': json.dumps({'error': 'title, content and username are required'})
             }
 
-        user = session.query(User).filter_by(username=username).filter_by(email=email).first()
+        user = session.query(User).filter_by(email=email).first()
         if not user:
-            try:
-                user = User(
-                    user_id=str(uuid.uuid4()),
-                    username=username,
-                    email=email
-                )
-                session.add(user)
-                session.commit()
-            except Exception as e:
-                logger.error("Error creating user: there was already a user with the same username or email")
-                return {
-                    'statusCode': 500,
-                    'body': 'There was already a user with the same username or email'
-                }
+            logger.error("User not found")
+            return {
+                'statusCode': 400,
+                'body': 'User not found'
+            }
 
         logger.info(f'User: {user.user_id}')
 

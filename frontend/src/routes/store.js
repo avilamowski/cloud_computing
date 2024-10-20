@@ -11,7 +11,7 @@ export function localStorageStore(key, initial) {
             localStorage.removeItem(key);
             return;
         }
-        localStorage.setItem(key, JSON.stringify(v))
+        localStorage.setItem(key, v)
     });
         
     return store;
