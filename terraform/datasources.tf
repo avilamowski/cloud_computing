@@ -10,8 +10,10 @@ data "aws_iam_role" "lab_role" {
   name = "LabRole"
 }
 
-data "archive_file" "lambda_upload_image" {
+data "archive_file" "zipped_lambdas" {
+  for_each = toset(var.zipped_lambdas)
+
   type        = "zip"
-  source_file = "${path.cwd}/../backend/upload_image.py"
-  output_path = "${path.cwd}/lambda_upload_image.zip"
+  source_file = "${path.cwd}/../backend/${each.key}.py"
+  output_path = "${path.cwd}/lambda_${each.key}.zip"
 }
