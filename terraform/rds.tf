@@ -18,10 +18,13 @@ resource "aws_db_instance" "default" {
   db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
   vpc_security_group_ids = [aws_security_group.bd_sg.id]
   skip_final_snapshot    = true
+  tags = {
+    Name = "bd-sql"
+  }
 }
 
 module "rds_proxy" {
-  source = "terraform-aws-modules/rds-proxy/aws"
+  source = "./modules/rds-proxy"
 
   name                   = "bd-sql-proxy"
   create_iam_role        = false
@@ -29,24 +32,6 @@ module "rds_proxy" {
   vpc_security_group_ids = [aws_security_group.proxy_sg.id]
   role_arn               = data.aws_iam_role.lab_role.arn
   require_tls            = false
-
-  # endpoints = {
-  #   read_write = {
-  #     name                   = "read-write-endpoint"
-  #     vpc_subnet_ids         = module.vpc.private_subnets
-  #     vpc_security_group_ids = [module.rds_proxy_sg.security_group_id]
-  #     #   tags                   = []
-  #   },
-  #   read_only = {
-  #     name                   = "read-only-endpoint"
-  #     vpc_subnet_ids         = module.vpc.private_subnets
-  #     vpc_security_group_ids = []
-  #     target_role            = "READ_ONLY"
-  #     #   tags                   = []
-  #   }
-  # }
-
-
   auth = {
     (var.rds.db_username) = {
       description = aws_secretsmanager_secret.db_credentials.description

@@ -88,7 +88,7 @@ resource "aws_vpc_security_group_egress_rule" "lambda_vpc_endpoint" {
 
 resource "aws_vpc_endpoint" "secrets_manager" {
   vpc_id              = var.lambda_vpc_id
-  service_name        = "com.amazonaws.${data.aws_region.current.name}.secretsmanager"
+  service_name        = "com.amazonaws.${var.lambda_region_name}.secretsmanager"
   vpc_endpoint_type   = "Interface"
   security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
   subnet_ids          = var.lambda_subnets

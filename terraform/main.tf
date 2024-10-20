@@ -29,6 +29,7 @@ module "dockerized_lambdas" {
   lambda_subnets        = local.subnet_ids
   lambda_env_vars       = local.lambda_env_vars
   lambda_aws_account_id = data.aws_caller_identity.current.account_id
+  lambda_region_name    = data.aws_region.current.name
 }
 
 resource "aws_vpc_security_group_egress_rule" "lambda_sg_egress" {

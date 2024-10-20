@@ -26,3 +26,7 @@ variable "lambda_role_arn" {
 variable "lambda_aws_account_id" {
   type = string
 }
+
+variable "lambda_region_name" {
+  type = string
+}
