@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { post } from '$lib/api';
+  import { token, refreshToken } from '../store';
   import { PUBLIC_COGNITO_APP_CLIENT_ID, PUBLIC_COGNITO_URL, PUBLIC_REDIRECT_URL } from '$env/static/public';
   import { isLoading } from '../store';
   import { goto } from '$app/navigation';
@@ -44,10 +44,14 @@
           },
           body: bodyObj.toString(),
       });
-      const token = await response.json();
-      console.log(token)
-      localStorage.setItem('token', token.id_token);
-      localStorage.setItem('refresh_token', token.refresh_token);
+      const {id_token, refresh_token} = await response.json();
+
+      token.set(id_token);
+      refreshToken.set(refresh_token);
+
+      console.log("Token stored");
+      // localStorage.setItem('token', token.id_token);
+      // localStorage.setItem('refresh_token', token.refresh_token);
     } catch (error) {
       throw error;
     } finally {

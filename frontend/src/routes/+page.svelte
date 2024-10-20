@@ -11,7 +11,9 @@
 	import Searchbar from './Searchbar.svelte';
 	import * as api from '$lib/api';
 	import { afterNavigate, goto } from '$app/navigation';
+	import { token } from './store';
 
+	$: isAuthenticated = $token !== null;
 
 	const carta = new Carta({
 		extensions: [
@@ -159,9 +161,11 @@
 
 			<div class="col-md-3">
 				<Searchbar {searchTerm} href={(t) => `/?search=${t}`}/>
-				<button class="btn btn-lg btn-primary btn-block" on:click={toggleModal} type="button">
-					Create Publication
-				</button>
+				{#if isAuthenticated}
+					<button class="btn btn-lg btn-primary btn-block" on:click={toggleModal} type="button">
+						Create Publication
+					</button>
+				{/if}
 					<!-- Modal -->
 					{#if showModal}
 						<div class="modal" role="dialog">

@@ -3,11 +3,19 @@ import { writable } from 'svelte/store';
 // export const publicationStore = writable(null);
 export const isLoading = writable(false);
 
-function localStorageStore(key, initial) {
+export function localStorageStore(key, initial) {
     const value = localStorage.getItem(key)
     const store = writable(value == null ? initial : value);
-    store.subscribe(v => localStorage.setItem(key, JSON.stringify(v)));
+    store.subscribe(v => {
+        if (v == null) {
+            localStorage.removeItem(key);
+            return;
+        }
+        localStorage.setItem(key, JSON.stringify(v))
+    });
+        
     return store;
 }
 
-export const isAuthenticated = localStorageStore('token', null);
+export const token = localStorageStore('token', null);
+export const refreshToken = localStorageStore('refreshToken', null);

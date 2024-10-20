@@ -1,12 +1,14 @@
 <script>
 	import { page } from '$app/stores';
 	import { getSignInUrl, getRegisterUrl, getSignOutUrl } from '$lib/auth';
-	import { isAuthenticated } from  '../routes/store';
+	import { token, refreshToken } from  '../routes/store';
 	
 	function logout() {	
-		localStorage.removeItem('token');
-		localStorage.removeItem('refresh_token');
+		token.set(null);
+		refreshToken.set(null);
 	}
+
+	$: isAuthenticated = $token !== null;
 
 
 </script>
@@ -19,7 +21,7 @@
 				<a class="nav-link" class:active={$page.url.pathname === '/'} href="/">Home</a>
 			</li>
 
-			{#if isAuthenticated === true}
+			{#if isAuthenticated}
 				<li>
 					<a href={getSignOutUrl()} class="nav-link" class:active={$page.url.pathname === '/logout'} on:click={logout}>
 						Logout
