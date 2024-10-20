@@ -15,10 +15,13 @@
 
     if (code) {
       handleCognitoAuth({code: code});
+      goto(window.history.state?.referrer || '/');
     } else if (error) {
       console.error('OAuth Error:', error);
+    } else {
+      goto('/');
     }
-    goto(window.history.state?.referrer || '/');
+    
   });
 
   async function handleCognitoAuth(options) {

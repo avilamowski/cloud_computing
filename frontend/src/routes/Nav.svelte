@@ -1,6 +1,14 @@
 <script>
 	import { page } from '$app/stores';
-	import { getSignInUrl, getRegisterUrl } from '$lib/api'
+	import { getSignInUrl, getRegisterUrl, getSignOutUrl } from '$lib/auth';
+	import { isAuthenticated } from  '../routes/store';
+	
+	function logout() {	
+		localStorage.removeItem('token');
+		localStorage.removeItem('refresh_token');
+	}
+
+
 </script>
 
 <nav class="navbar navbar-light">
@@ -11,8 +19,13 @@
 				<a class="nav-link" class:active={$page.url.pathname === '/'} href="/">Home</a>
 			</li>
 
-			{#if $page.data.user}
-				<li class="nav-item">
+			{#if isAuthenticated === true}
+				<li>
+					<a href={getSignOutUrl()} class="nav-link" class:active={$page.url.pathname === '/logout'} on:click={logout}>
+						Logout
+					</a>
+				</li>
+				<!-- <li class="nav-item">
 					<a href="/editor" class="nav-link" class:active={$page.url.pathname === '/editor'}>
 						<i class="ion-compose" />&nbsp;New Post
 					</a>
@@ -28,7 +41,10 @@
 					<a href="/profile/@{$page.data.user.username}" class="nav-link">
 						{$page.data.user.username}
 					</a>
-				</li>
+				</li> -->
+				
+				
+				
 			{:else}
 				<li class="nav-item">
 					<a href={getSignInUrl()} class="nav-link" class:active={$page.url.pathname === '/login'}>
@@ -41,6 +57,7 @@
 						Sign up
 					</a>
 				</li>
+				
 			{/if}
 		</ul>
 	</div>

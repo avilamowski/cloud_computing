@@ -1,6 +1,8 @@
 import { PUBLIC_COGNITO_APP_CLIENT_ID, PUBLIC_COGNITO_URL, PUBLIC_REDIRECT_URL } from '$env/static/public';
-import { getTokens } from "../server/helpers";
-import { error, redirect } from "@sveltejs/kit";
+
+const cognitoAppClientId = PUBLIC_COGNITO_APP_CLIENT_ID;
+const cognitoUrl = PUBLIC_COGNITO_URL;
+const redirectUrl = PUBLIC_REDIRECT_URL;
 
 export function getSignInUrl() {
 
@@ -26,12 +28,15 @@ export function getRegisterUrl() {
 	return loginUrl.toString();
 }
 
-export function getSignOutUrl() {
-
+export function getSignOutUrl(){
 	const logoutUrl = new URL("/logout", cognitoUrl);
 	logoutUrl.searchParams.set("response_type", "code");
 	logoutUrl.searchParams.set("client_id", cognitoAppClientId);
 	logoutUrl.searchParams.set("redirect_uri", redirectUrl);
-
+	logoutUrl.searchParams.set("logout_uri", redirectUrl);
+	logoutUrl.searchParams.set("scope", "email openid");
+	
 	return logoutUrl.toString();
 }
+
+
