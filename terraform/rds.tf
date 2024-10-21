@@ -1,5 +1,4 @@
 resource "aws_db_subnet_group" "db_subnet_group" {
-  depends_on = [module.vpc]
   name       = "db_subnet_group"
   subnet_ids = module.vpc.database_subnets
 }
@@ -72,34 +71,38 @@ resource "aws_security_group" "proxy_sg" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "bd_sg_ingress" {
-  depends_on                   = [aws_security_group.bd_sg, aws_security_group.proxy_sg]
   security_group_id            = aws_security_group.bd_sg.id
   from_port                    = 5432
   to_port                      = 5432
   ip_protocol                  = "tcp"
   referenced_security_group_id = aws_security_group.proxy_sg.id
+  depends_on                   = [aws_security_group.bd_sg, aws_security_group.proxy_sg]
+
 }
 
 resource "aws_vpc_security_group_ingress_rule" "proxy_sg_ingress" {
-  depends_on                   = [aws_security_group.bd_sg, module.dockerized_lambdas.lambda_sg]
   security_group_id            = aws_security_group.proxy_sg.id
   from_port                    = 5432
   to_port                      = 5432
   ip_protocol                  = "tcp"
   referenced_security_group_id = module.dockerized_lambdas.lambda_sg.id
+  depends_on                   = [aws_security_group.bd_sg, module.dockerized_lambdas.lambda_sg]
+
 }
 
 resource "aws_vpc_security_group_egress_rule" "proxy_sg_egress" {
-  depends_on                   = [aws_security_group.bd_sg, aws_security_group.proxy_sg]
   security_group_id            = aws_security_group.proxy_sg.id
   from_port                    = 5432
   to_port                      = 5432
   ip_protocol                  = "tcp"
   referenced_security_group_id = aws_security_group.bd_sg.id
+  depends_on                   = [aws_security_group.bd_sg, aws_security_group.proxy_sg]
+
 }
 
-resource "aws_lambda_invocation" "init_db_invoke" {
-  function_name = module.dockerized_lambdas.lambdas["init_db"].function_name
-  depends_on    = [module.rds_proxy]
-  input         = jsonencode({})
-}
+# resource "aws_lambda_invocation" "init_db_invoke" {
+#   function_name = module.dockerized_lambdas.lambdas["init_db"].function_name
+#   input         = jsonencode({})
+#   depends_on    = [module.rds_proxy]
+
+# }

@@ -24,7 +24,11 @@ rds = {
   db_port     = 5432
 }
 
-lambda_names = ["get_publications", "get_comments", "create_publication", "create_comment", "init_db", "create_user"]
+dockerized_lambda_names = ["get_publications", "get_comments", "create_publication", "create_comment", "init_db", "create_user"]
+
+zipped_lambdas = [
+  "upload_image", "redirect"
+]
 
 api_endpoints = [
   {
