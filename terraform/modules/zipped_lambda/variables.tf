@@ -7,7 +7,7 @@ variable "lambda_role_arn" {
 }
 
 variable "environment_variables" {
-  type = object({})
+  type = map(string)
 }
 
 variable "source_code_hash" {

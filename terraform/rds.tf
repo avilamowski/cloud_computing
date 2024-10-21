@@ -100,9 +100,9 @@ resource "aws_vpc_security_group_egress_rule" "proxy_sg_egress" {
 
 }
 
-resource "aws_lambda_invocation" "init_db_invoke" {
-  function_name = module.dockerized_lambdas.lambdas["init_db"].function_name
-  input         = jsonencode({})
-  depends_on    = [module.rds_proxy]
+# resource "aws_lambda_invocation" "init_db_invoke" {
+#   function_name = module.dockerized_lambdas.lambdas["init_db"].function_name
+#   input         = jsonencode({})
+#   depends_on    = [module.rds_proxy]
 
-}
+# }

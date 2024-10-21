@@ -35,21 +35,18 @@ module "dockerized_lambdas" {
 
 locals {
   environment_variables = {
-    upload_image = {
-      environment_variables = {
-        BUCKET_NAME = module.s3["uploaded-images"].bucket_name
-      }
+    "upload_image" = {
+      "BUCKET_NAME" = module.s3["uploaded-images"].bucket_name
     }
-    redirect = {
-      environment_variables = {
-        "frontend_url" = module.s3["soul-pupils-spa"].frontend_endpoint
-      }
+    "redirect" = {
+      "FRONTEND_URL" = module.s3["soul-pupils-spa"].frontend_endpoint
     }
   }
 }
 
-module "zipped_lambdas" {
-  source                = "./modules/zipped_lambdas"
+
+module "zipped_lambda" {
+  source                = "./modules/zipped_lambda"
   for_each              = toset(var.zipped_lambdas)
   lambda_name           = each.key
   environment_variables = local.environment_variables[each.key]
@@ -83,8 +80,8 @@ resource "aws_apigatewayv2_api" "api_gateway" {
 
 
 locals {
-  redirect_lambda     = module.dockerized_lambdas["redirect"]
-  upload_image_lambda = module.dockerized_lambdas["upload_image_lambda"]
+  redirect_lambda     = module.zipped_lambda["redirect"]
+  upload_image_lambda = module.zipped_lambda["upload_image"]
   private_lambdas     = module.dockerized_lambdas.lambdas
   regional_lambdas = {
     (local.upload_image_lambda.function_name) = local.upload_image_lambda
