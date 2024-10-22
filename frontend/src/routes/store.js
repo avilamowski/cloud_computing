@@ -7,7 +7,7 @@ export function localStorageStore(key, initial) {
     const value = localStorage.getItem(key)
     const store = writable(value == null ? initial : value);
     store.subscribe(v => {
-        if (v == null) {
+        if (v == undefined) {
             localStorage.removeItem(key);
             return;
         }

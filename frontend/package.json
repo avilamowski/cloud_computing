@@ -29,6 +29,7 @@
 		"@cartamd/plugin-attachment": "^4.0.2",
 		"@magidoc/plugin-svelte-marked": "^6.0.1",
 		"@types/marked": "^5.0.2",
+		"aws-amplify": "^6.6.6",
 		"carta-md": "^4.4.5"
 	}
 }

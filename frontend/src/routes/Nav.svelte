@@ -1,15 +1,22 @@
 <script>
 	import { page } from '$app/stores';
-	import { getSignInUrl, getRegisterUrl, getSignOutUrl } from '$lib/auth';
-	import { token, refreshToken } from  '../routes/store';
-	
-	function logout() {	
-		token.set(null);
-		refreshToken.set(null);
+	import { token } from  '../routes/store';
+	import { fetchAuthSession, signOut } from 'aws-amplify/auth';
+	import { onMount } from 'svelte';
+
+	onMount(async () => {
+		const session = await fetchAuthSession();
+		token.set(session?.tokens?.idToken);
+		console.log("Cambiando session en nav")
+		token.subscribe(value => console.log("cambio:" + value));
+	});
+
+	const logout = () => {
+		signOut();
+		token.set(undefined);
 	}
-
-	$: isAuthenticated = $token !== null;
-
+	
+	$: isAuthenticated = $token != undefined;
 
 </script>
 
@@ -23,7 +30,7 @@
 
 			{#if isAuthenticated}
 				<li class="nav-item">
-					<a href={getSignOutUrl()} class="nav-link" class:active={$page.url.pathname === '/logout'} on:click={logout}>
+					<a href="/" class="nav-link" class:active={$page.url.pathname === '/logout'} on:click={logout}>
 						Logout
 					</a>
 				</li>
@@ -49,13 +56,13 @@
 				
 			{:else}
 				<li class="nav-item">
-					<a href={getSignInUrl()} class="nav-link" class:active={$page.url.pathname === '/login'}>
+					<a href='/login' class="nav-link" class:active={$page.url.pathname === '/login'}>
 						Sign in
 					</a>
 				</li>
 
 				<li class="nav-item">
-					<a href={getRegisterUrl()} class="nav-link" class:active={$page.url.pathname === '/register'}>
+					<a href='/register' class="nav-link" class:active={$page.url.pathname === '/register'}>
 						Sign up
 					</a>
 				</li>
