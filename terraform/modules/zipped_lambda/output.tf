@@ -9,8 +9,3 @@ output "function_url" {
 output "invoke_arn" {
   value = aws_lambda_function.this.invoke_arn
 }
-
-# sacar
-output "environment_variables" {
-  value = var.environment_variables
-}

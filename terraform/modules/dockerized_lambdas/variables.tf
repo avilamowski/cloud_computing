@@ -30,3 +30,13 @@ variable "lambda_aws_account_id" {
 variable "lambda_region_name" {
   type = string
 }
+
+variable "lambda_security_group_name" {
+  type    = string
+  default = "lambda_sg"
+}
+
+variable "lambda_vpc_endpoint_sg_name" {
+  type    = string
+  default = "vpc_endpoint_sg"
+}

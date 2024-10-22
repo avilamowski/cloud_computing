@@ -3,7 +3,7 @@ resource "terraform_data" "zip_lambda" {
     command = "zip -j ${path.cwd}/lambda_${var.lambda_name}.zip ${path.cwd}/../backend/${var.lambda_name}.py"
   }
   triggers_replace = {
-    always_run = "${timestamp()}" # TODO: Check hash?
+    always_run = "${timestamp()}"
   }
 }
 

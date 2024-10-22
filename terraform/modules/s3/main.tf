@@ -1,6 +1,5 @@
 resource "aws_s3_bucket" "this" {
   bucket_prefix = var.s3_name
-
 }
 
 resource "aws_s3_bucket_public_access_block" "this" {
@@ -11,7 +10,7 @@ resource "aws_s3_bucket_public_access_block" "this" {
   restrict_public_buckets = false
 }
 
-resource "aws_s3_bucket_versioning" "versioning" {
+resource "aws_s3_bucket_versioning" "this" {
   bucket = aws_s3_bucket.this.id
   versioning_configuration {
     status = var.s3_versioning ? "Enabled" : "Disabled"
@@ -38,7 +37,7 @@ resource "aws_s3_bucket_ownership_controls" "this" {
   }
 }
 
-resource "aws_s3_bucket_acl" "example" {
+resource "aws_s3_bucket_acl" "this" {
   bucket = aws_s3_bucket.this.bucket
   acl    = "public-read"
   depends_on = [

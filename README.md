@@ -40,10 +40,15 @@ Las pruebas se realizaron en máquinas con Linux (Ubuntu) y MacOS.
 El proyecto puede tardar 20 minutos en completarse.
 Si llegara a fallar por algún motivo se recomienda volver a correr el paso 4.
 
+5. Luego de esperar un tiempo prudencial (5~10min), ejecutar el comando `aws lambda invoke --function-name init_db response.json --region us-east-1` para inicializar la base de datos. Se decidió no inicializar la base de datos dentro de terraform ya que esto no es infraestructura y trasciende el uso de terraform.
+6. Utilizar la URL del frontend provista por el bucket con nombre prefijo `soul-pupils-spa`.
+
+
 ## Módulos
 ### Internos
-- `dockerized-lambdas`: crea las lambdas. Para esto, requiere sus nombres, subnets en las que se encuentran, variables de entorno, vpc, rol y id de la cuenta de Amazon. Como output, devuelve el security group asociado a las lambdas y el objeto asociado a cada una de ellas.
+- `dockerized_lambdas`: crea las lambdas que utilizan docker. Para esto, requiere sus nombres, subnets en las que se encuentran, variables de entorno, vpc, rol y id de la cuenta de Amazon. Como output, devuelve el security group asociado a las lambdas y el objeto asociado a cada una de ellas.
 - `s3`: crea un bucket. Para esto, requiere su nombre, un flag para saber si el bucket se utilizará para hostear los archivos de la SPA, y si tiene versionado. Como output, devuelve el nombre del bucket, su id y el endpint para acceder al sitio web en caso de alojar sus archivos. 
+- `zipped_lambda`: crea una lambda utilizando un archivo .zip. Para esto, requiere su nombre, variables de entorno, rol y el hash del código fuente. Como output devuelve el nombre, la url y el arn de la función.
 ### Externos
 - `vpc`: crea una VPC. https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest
 - `aws_db_proxy`: crea una base de datos RDS. https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_proxy
@@ -51,17 +56,13 @@ Observación: debido a que cada `terraform apply` provoca que se modifique el pr
 
 
 ## Algunas funciones utilizadas
-- `slice`: Corta una lista en un rango dado. Es utilizada para particionar las subnets privadas del backend, de las de la base de datos:
+- `slice`: Corta una lista en un rango dado. Es utilizada para particionar los cidrs dentro del cidr de la vpc:
 ```tf
-  subnet_ids  = slice(module.vpc.private_subnets, 0, 2) 
+  private_subnet_cidrs  = slice(local.cidrs, 0, 2)
 ```
 - `merge`: Combina dos mapas. Es utilizada para combinar las lambdas dockerizadas con las comunes y poder registrarlas en el API Gateway:
 ```tf
   all_lambdas = merge(local.private_lambdas, local.regional_lambdas)
-```
-- `format`: Formatea un string. Es utilizada para armar el endpoint de Cognito:
-```tf
-    issuer   = format("%s%s", "https://", aws_cognito_user_pool.soul-pupils.endpoint)
 ```
 - `timestamp`: Devuelve la fecha y hora actual. Es utilizada para garantizar que los scripts de inicialización se ejecuten siempre:
 ```tf
