@@ -80,13 +80,13 @@ Observación: debido a que cada `terraform apply` provoca que se modifique el pr
 
 ## Meta-argumentos utilizados
 - `depends_on`: le indica a Terraform que complete todas las acciones en el objeto de dependencia antes de realizar acciones en el objeto que declara la dependencia.
-Un caso de uso en el proyecto, es en el archivo `upload_files.tf`, en el que se requiere de la existencia del archivo .zip para crearla.
+Un caso de uso en el proyecto, es en el modulo `dockerized_lambdas`, en el que se requiere que las imagenes ya se encuentren subidas antes de crear los lambdas.
 ```tf
-    depends_on = [terraform_data.zip_lambda]
+  depends_on = [terraform_data.deploy_images]
 ```
 
 - `for_each`: sirve para crear múltiples instancias de un recurso definido. También brinda la flexibilidad de configurar dinámicamente los atributos de cada instancia de recurso creada, dependiendo del tipo de variables que se utilicen.
-El caso de uso más destacado en el proyecto es el de creación de las lambdas.
+Un caso de uso en el proyecto es el de creación de las lambdas.
 ```tf
   for_each   = toset(var.lambda_names)
 ```
