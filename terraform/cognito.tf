@@ -48,8 +48,6 @@ resource "aws_cognito_user_pool_domain" "main" {
 resource "aws_cognito_user_pool_client" "main" {
   name                                 = "soul-pupils-client"
   user_pool_id                         = aws_cognito_user_pool.main.id
-  callback_urls                        = ["${local.redirect_lambda.function_url}"]
-  logout_urls                          = ["${local.redirect_lambda.function_url}"]
   allowed_oauth_flows_user_pool_client = true
   allowed_oauth_flows                  = ["code"]
   allowed_oauth_scopes                 = ["email", "openid"]

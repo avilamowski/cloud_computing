@@ -31,9 +31,6 @@ locals {
     "upload_image" = {
       "BUCKET_NAME" = module.s3["uploaded-images"].bucket_name
     }
-    "redirect" = {
-      "FRONTEND_URL" = module.s3["soul-pupils-spa"].frontend_endpoint
-    }
   }
 }
 
@@ -71,12 +68,10 @@ resource "aws_apigatewayv2_api" "main" {
 
 
 locals {
-  redirect_lambda     = module.zipped_lambda["redirect"]
   upload_image_lambda = module.zipped_lambda["upload_image"]
   private_lambdas     = module.dockerized_lambdas.lambdas
   regional_lambdas = {
     (local.upload_image_lambda.function_name) = local.upload_image_lambda
-    (local.redirect_lambda.function_name)     = local.redirect_lambda
   }
 
   all_lambdas = merge(local.private_lambdas, local.regional_lambdas)

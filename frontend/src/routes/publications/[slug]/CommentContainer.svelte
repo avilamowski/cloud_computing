@@ -2,7 +2,6 @@
 	import CommentInput from './CommentInput.svelte';
 	import Comment from './Comment.svelte';
 	import {token} from '../../store';
-	import { getRegisterUrl, getSignInUrl } from '../../../lib/auth';
 
 	$: isAuthenticated = $token !== null;
 	export let comments;
@@ -14,9 +13,9 @@
 		<CommentInput on:commentForm/>
 	{:else}
 		<p>
-			<a href="{getSignInUrl()}">Sign in</a>
+			<a href="/login">Sign in</a>
 			or
-			<a href="{getRegisterUrl()}">sign up</a>
+			<a href="/register">sign up</a>
 			to add comments on this article.
 		</p>
 	{/if}
