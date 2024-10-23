@@ -3,6 +3,7 @@
 
 ## Tabla de contenidos
 - [Introducción](#introducción)
+- [Arquitectura](#arquitectura)
 - [Pre-requisitos](#pre-requisitos)
 - [Ejecución](#ejecución)
 - [Módulos](#módulos)
@@ -22,6 +23,9 @@ El backend se basa en una serie de Lambdas de AWS escritas en Python, y se utili
 Las imagenes de las publicaciones se guardan en un bucket de S3, y pueden ser cargadas utilizando una Lambda Regional.
 
 Toda la autenticación se realiza utilizando Cognito.
+
+## Arquitectura
+![Arquitectura](architecture/Architecture.png)
 
 ## Requisitos
 - Terraform v1.8.5 o superior
@@ -48,6 +52,7 @@ Si llegara a fallar por algún motivo se recomienda volver a correr el paso 4.
 ### Internos
 - `dockerized_lambdas`: crea las lambdas que utilizan docker. Para esto, requiere sus nombres, subnets en las que se encuentran, variables de entorno, vpc, rol y id de la cuenta de Amazon. Como output, devuelve el security group asociado a las lambdas y el objeto asociado a cada una de ellas.
 - `s3`: crea un bucket. Para esto, requiere su nombre, un flag para saber si el bucket se utilizará para hostear los archivos de la SPA, y si tiene versionado. Como output, devuelve el nombre del bucket, su id y el endpint para acceder al sitio web en caso de alojar sus archivos. 
+Observación: debido a que CloudFront no está habilitado en el LAB, no se pudieron tomar medidas para mejorar la seguridad y el cacheo de los archivos de los buckets, y toda su información es pública. Esto fue debidamente discutido, y es una decisión de diseño frente a las limtaciones del LAB.
 - `zipped_lambda`: crea una lambda utilizando un archivo .zip. Para esto, requiere su nombre, variables de entorno, rol y el hash del código fuente. Como output devuelve el nombre, la url y el arn de la función.
 ### Externos
 - `vpc`: crea una VPC. https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest

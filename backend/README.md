@@ -2,19 +2,9 @@
 
 ### Developed with Python 3.11 and AWS Lambda 
 
-## Test locally:
+## Test locally (possibly deprecated):
 ```bash
 docker compose up --watch
-```
-
-## Deploy all lambdas (docker)
-```bash
-./deploy_all.sh [aws_id]
-```
-
-## Deploy a single lambda (docker)
-```bash
-./deploy.sh [lambda_name] [aws_id]
 ```
 
 ## Deploy `upload_image` lambda

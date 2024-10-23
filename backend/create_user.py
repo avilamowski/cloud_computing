@@ -15,7 +15,7 @@ def lambda_handler(event, context):
         try:
             email = event.get('request').get('userAttributes').get('email')
             username = event.get('request').get('userAttributes').get('preferred_username') 
-            
+
             try:
                 user = User(
                     user_id=str(uuid.uuid4()),
@@ -25,11 +25,7 @@ def lambda_handler(event, context):
                 session.add(user)
                 session.commit()
             except Exception as e:
-                logger.error("Error creating user: there was already a user with the same email")
-                return {
-                    'statusCode': 500,
-                    'body': 'There was already a user with the same username or email'
-                }
+                logger.error(e)
 
             # logger.info(f'User: {user.user_id}')
             session.close()
