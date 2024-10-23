@@ -11,7 +11,7 @@ logger.setLevel(logging.INFO)
 def lambda_handler(event, context):
     session = get_session()
     logger.info(event)
-    if event['triggerSource'] != 'PostConfirmation_ConfirmSignUp':
+    if event['triggerSource'] == 'PostConfirmation_ConfirmSignUp':
         try:
             email = event.get('request').get('userAttributes').get('email')
             username = event.get('request').get('userAttributes').get('preferred_username') 

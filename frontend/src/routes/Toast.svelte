@@ -1,15 +1,15 @@
 <script>
-  export let message = '';
-  export let visible = false;
-  export let type = 'success';
-  
-  // Hide the toast after 3 seconds
-  $: if (visible) {
-    setTimeout(() => {
-      visible = false;
-    }, 3000);
-}
+  import { toastStore } from '../routes/store';
+  let message = '';
+  let visible = false;
+  let type = 'success';
 
+  // Subscribing to the toastStore to get the current toast data
+  $: toastStore.subscribe(({ message: newMessage, type: newType, visible: newVisible }) => {
+    message = newMessage;
+    type = newType;
+    visible = newVisible;
+  });
 </script>
 
 {#if visible}

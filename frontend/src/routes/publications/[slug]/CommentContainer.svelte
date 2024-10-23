@@ -1,11 +1,10 @@
 <script>
 	import CommentInput from './CommentInput.svelte';
 	import Comment from './Comment.svelte';
-	import {token} from '../../store';
+	import { token } from '../../store';
 
-	$: isAuthenticated = $token !== null;
+	$: isAuthenticated = $token !== undefined;
 	export let comments;
-	// export let user;
 </script>
 
 <div class="col-xs-12 col-md-8 offset-md-2">
