@@ -1,5 +1,5 @@
 # Soul Pupils TP 3 
-### Cloud Computing - Grupo 3 - 2024 ITBA
+### Cloud Computing - Grupo 2 - 2024 ITBA
 
 ## Tabla de contenidos
 - [Introducción](#introducción)
