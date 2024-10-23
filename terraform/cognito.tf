@@ -52,10 +52,10 @@ resource "aws_cognito_user_pool_client" "main" {
   allowed_oauth_flows                  = ["code"]
   allowed_oauth_scopes                 = ["email", "openid"]
   supported_identity_providers         = ["COGNITO"]
-
-  access_token_validity  = 1
-  id_token_validity      = 1
-  refresh_token_validity = 30
+  callback_urls                        = ["http://localhost:3000"]
+  access_token_validity                = 1
+  id_token_validity                    = 1
+  refresh_token_validity               = 30
 }
 
 resource "terraform_data" "cognito_base_url" {
