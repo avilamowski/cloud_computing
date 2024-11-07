@@ -14,6 +14,10 @@ s3_buckets = {
   "uploaded-images" : {
     website    = false
     versioning = true
+  },
+  "spam-filter-files" : {
+    website    = false
+    versioning = true
   }
 }
 
@@ -24,7 +28,7 @@ rds = {
   db_port     = 5432
 }
 
-dockerized_lambda_names = ["get_publications", "get_comments", "create_publication", "create_comment", "init_db", "create_user", "get_tags"]
+dockerized_lambda_names = ["get_publications", "get_comments", "create_publication", "create_comment", "init_db", "create_user", "get_tags", "spam_detector"]
 
 zipped_lambdas = [
   "upload_image"

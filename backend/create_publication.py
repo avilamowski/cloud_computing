@@ -4,9 +4,15 @@ import json
 import uuid
 import datetime
 import logging
+import boto3
+import os
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
+
+
+sqs_client = boto3.client('sqs')
+SQS_QUEUE_URL = os.environ.get('SQS_QUEUE_URL')
 
 def lambda_handler(event, context):
     session = get_session()
@@ -68,6 +74,15 @@ def lambda_handler(event, context):
         publication_id = str(new_publication.publication_id)
 
         session.close()
+
+        sqs_message = {
+            'id': publication_id,
+            'type': 'publication'
+        }
+        sqs_client.send_message(
+            QueueUrl=SQS_QUEUE_URL,
+            MessageBody=json.dumps(sqs_message)
+        )
 
         return {
             'statusCode': 201,

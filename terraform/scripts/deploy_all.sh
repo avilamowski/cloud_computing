@@ -8,4 +8,5 @@ aws ecr get-login-password --region us-east-1 | docker login --username AWS --pa
 ./deploy.sh get_tags $1 &
 ./deploy.sh init_db $1 &
 ./deploy.sh create_user $1 &
+./deploy.sh spam_detector $1 &
 wait

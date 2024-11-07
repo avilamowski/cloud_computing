@@ -80,11 +80,12 @@ resource "aws_vpc_security_group_ingress_rule" "lambda_vpc_endpoint" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "lambda_vpc_endpoint" {
-  security_group_id            = aws_security_group.lambda.id
-  from_port                    = 443
-  to_port                      = 443
-  ip_protocol                  = "tcp"
-  referenced_security_group_id = aws_security_group.vpc_endpoint.id
+  security_group_id = aws_security_group.lambda.id
+  from_port         = 443
+  to_port           = 443
+  ip_protocol       = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
+  # referenced_security_group_id = aws_security_group.vpc_endpoint.id
 }
 
 
@@ -97,3 +98,20 @@ resource "aws_vpc_endpoint" "secrets_manager" {
   private_dns_enabled = true
 }
 
+resource "aws_vpc_endpoint" "sqs" {
+  vpc_id              = var.lambda_vpc_id
+  service_name        = "com.amazonaws.${var.lambda_region_name}.sqs"
+  vpc_endpoint_type   = "Interface"
+  security_group_ids  = [aws_security_group.vpc_endpoint.id]
+  subnet_ids          = var.lambda_subnets
+  private_dns_enabled = true
+}
+
+resource "aws_vpc_endpoint" "sns" {
+  vpc_id              = var.lambda_vpc_id
+  service_name        = "com.amazonaws.${var.lambda_region_name}.sns"
+  vpc_endpoint_type   = "Interface"
+  security_group_ids  = [aws_security_group.vpc_endpoint.id]
+  subnet_ids          = var.lambda_subnets
+  private_dns_enabled = true
+}

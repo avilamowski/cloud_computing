@@ -8,10 +8,13 @@ variable "lambda_subnets" {
 
 variable "lambda_env_vars" {
   type = object({
-    DB_HOST     = string
-    DB_NAME     = string
-    DB_PORT     = string
-    SECRET_NAME = string
+    DB_HOST          = string
+    DB_NAME          = string
+    DB_PORT          = string
+    SECRET_NAME      = string
+    SPAM_BUCKET_NAME = string
+    SPAM_TOPIC_ARN   = string
+    SQS_QUEUE_URL    = string
   })
 }
 

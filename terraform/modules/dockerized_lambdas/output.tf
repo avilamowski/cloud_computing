@@ -8,3 +8,6 @@ output "lambdas" {
   }
 }
 
+output "vpc_endpoint_sg" {
+  value = aws_security_group.vpc_endpoint
+}

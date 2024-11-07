@@ -16,15 +16,24 @@ module "dockerized_lambdas" {
   lambda_names    = var.dockerized_lambda_names
   lambda_subnets  = module.vpc.private_subnets
   lambda_env_vars = {
-    DB_HOST     = module.rds_proxy.proxy_endpoint
-    DB_NAME     = var.rds.db_name
-    DB_PORT     = var.rds.db_port
-    SECRET_NAME = aws_secretsmanager_secret.db_credentials.name
+    DB_HOST          = module.rds_proxy.proxy_endpoint
+    DB_NAME          = var.rds.db_name
+    DB_PORT          = var.rds.db_port
+    SECRET_NAME      = aws_secretsmanager_secret.db_credentials.name
+    SPAM_BUCKET_NAME = module.s3["spam-filter-files"].bucket_name
+    SPAM_TOPIC_ARN   = aws_sns_topic.spam_topic.arn
+    SQS_QUEUE_URL    = aws_sqs_queue.spam_filter_queue.url
   }
   lambda_aws_account_id = data.aws_caller_identity.current.account_id
   lambda_region_name    = data.aws_region.current.name
 }
 
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id            = module.vpc.vpc_id
+  service_name      = "com.amazonaws.${data.aws_region.current.name}.s3"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids   = module.vpc.private_route_table_ids
+}
 
 locals {
   environment_variables = {
