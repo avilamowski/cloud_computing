@@ -16,7 +16,7 @@ def lambda_handler(event, context):
         data = json.loads(event.get('body'))
         title = data.get('title')
         content = data.get('content')
-        tags = data.get('tags', [])  # Obtener los tags del cuerpo de la solicitud
+        tags = data.get('tags', []) 
         claims = event['requestContext']['authorizer']['claims']
         email = claims['email']
 
@@ -42,7 +42,6 @@ def lambda_handler(event, context):
 
         logger.info(f'User: {user.user_id}')
 
-        # Crear nueva publicación
         new_publication = Publication(
             publication_id=str(uuid.uuid4()), 
             title=title,
@@ -51,10 +50,9 @@ def lambda_handler(event, context):
             created_at=datetime.datetime.now()
         )
 
-        # Procesar tags
         tag_objects = []
         for tag_name in tags:
-            tag_name = tag_name.strip().lower()  # Normalizar el nombre del tag
+            tag_name = tag_name.strip()
             tag = session.query(Tag).filter_by(name=tag_name).first()
             if not tag:
                 tag = Tag(tag_id=str(uuid.uuid4()), name=tag_name)
