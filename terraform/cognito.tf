@@ -71,7 +71,7 @@ resource "aws_cognito_user_group" "admin" {
   user_pool_id = aws_cognito_user_pool.main.id
   description  = "Admin group"
   precedence   = 1
-  role_arn     = data.aws_iam_role.lab_role
+  role_arn     = data.aws_iam_role.lab_role.arn
 }
 
 resource "aws_cognito_user" "main" {
