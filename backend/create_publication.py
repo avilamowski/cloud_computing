@@ -1,5 +1,5 @@
 from db import get_session
-from models import Publication, User
+from models import Publication, User, Tag
 import json
 import uuid
 import datetime
@@ -16,6 +16,7 @@ def lambda_handler(event, context):
         data = json.loads(event.get('body'))
         title = data.get('title')
         content = data.get('content')
+        tags = data.get('tags', [])  # Obtener los tags del cuerpo de la solicitud
         claims = event['requestContext']['authorizer']['claims']
         email = claims['email']
 
@@ -23,6 +24,12 @@ def lambda_handler(event, context):
             return {
                 'statusCode': 400,
                 'body': json.dumps({'error': 'title, content are required'})
+            }
+
+        if not isinstance(tags, list) or len(tags) > 5:
+            return {
+                'statusCode': 400,
+                'body': json.dumps({'error': 'Tags must be a list with a maximum of 5 items'})
             }
 
         user = session.query(User).filter_by(email=email).first()
@@ -35,6 +42,7 @@ def lambda_handler(event, context):
 
         logger.info(f'User: {user.user_id}')
 
+        # Crear nueva publicación
         new_publication = Publication(
             publication_id=str(uuid.uuid4()), 
             title=title,
@@ -42,6 +50,18 @@ def lambda_handler(event, context):
             user_id=user.user_id,
             created_at=datetime.datetime.now()
         )
+
+        # Procesar tags
+        tag_objects = []
+        for tag_name in tags:
+            tag_name = tag_name.strip().lower()  # Normalizar el nombre del tag
+            tag = session.query(Tag).filter_by(name=tag_name).first()
+            if not tag:
+                tag = Tag(tag_id=str(uuid.uuid4()), name=tag_name)
+                session.add(tag)
+            tag_objects.append(tag)
+
+        new_publication.tags.extend(tag_objects)
 
         logger.info(f'Publication: {new_publication.publication_id}')
         session.add(new_publication)
@@ -55,7 +75,7 @@ def lambda_handler(event, context):
             'statusCode': 201,
             'body': json.dumps({
                 'message': 'Publication created successfully',
-                'publication_id': publication_id
+                'publication_id': publication_id,
             })
         }
 

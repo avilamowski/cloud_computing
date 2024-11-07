@@ -38,4 +38,8 @@
   .toast.success {
     background-color: green;
   }
+
+  .toast.warning {
+    background-color: #ffc107;
+  }
 </style>

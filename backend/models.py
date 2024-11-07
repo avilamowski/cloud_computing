@@ -1,9 +1,16 @@
-from sqlalchemy import Column, String, Text, DateTime, ForeignKey
+from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 import datetime
 
 Base = declarative_base()
+
+# Tabla intermedia para la relación muchos-a-muchos entre Publication y Tag
+publication_tag_table = Table(
+    'publication_tag', Base.metadata,
+    Column('publication_id', String, ForeignKey('publications.publication_id'), primary_key=True),
+    Column('tag_id', String, ForeignKey('tags.tag_id'), primary_key=True)
+)
 
 class Comment(Base):
     __tablename__ = 'comments'
@@ -29,6 +36,7 @@ class Comment(Base):
 
 class Publication(Base):
     __tablename__ = 'publications'
+
     publication_id = Column(String, primary_key=True)
     title = Column(String(100), nullable=False)
     content = Column(Text, nullable=False)
@@ -36,7 +44,8 @@ class Publication(Base):
     created_at = Column(DateTime, default=datetime.datetime.now, nullable=False)
 
     user = relationship("User", back_populates="publications")
-    comments = relationship("Comment", back_populates="publication") 
+    comments = relationship("Comment", back_populates="publication")
+    tags = relationship("Tag", secondary=publication_tag_table, back_populates="publications")
 
     def to_dict(self):
         return {
@@ -45,7 +54,22 @@ class Publication(Base):
             'content': self.content,
             'user_id': str(self.user_id),
             'created_at': self.created_at.isoformat(),
-            'user': self.user.to_dict()
+            'user': self.user.to_dict(),
+            'tags': [tag.name for tag in self.tags]  # Añadir los tags a la salida
+        }
+
+class Tag(Base):
+    __tablename__ = 'tags'
+
+    tag_id = Column(String, primary_key=True)
+    name = Column(String(50), nullable=False, unique=True)
+
+    publications = relationship("Publication", secondary=publication_tag_table, back_populates="tags")
+
+    def to_dict(self):
+        return {
+            'tag_id': str(self.tag_id),
+            'name': self.name
         }
 
 class User(Base):

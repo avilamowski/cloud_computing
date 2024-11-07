@@ -10,6 +10,7 @@
   let data;
   let form;
   let publication = null;
+  let tags = []; // New variable to store tags
   let comments = [];
   let currentPage = 1; 
   let totalPages = 1;  
@@ -30,7 +31,7 @@
 
     const { publication: pub } = await api.get(`get_publications?${qPub}`);
     publication = pub;
-
+    tags = pub.tags || []; // Assign tags from publication to tags variable
     await loadComments();
   }
 
@@ -45,7 +46,6 @@
 
     const { comments: com, total_pages } = await api.get(`get_comments?${qCom}`);
 
-    console.log(com);
     comments = [...comments, ...com];
 
     totalPages = total_pages;
@@ -73,10 +73,10 @@
       form = { success: 'Comment was created successfully' };
       comments = [comment, ...comments];
       
-      toastStore.show('Comment created successfully!', 'success'); // Use toastStore for success message
+      toastStore.show('Comment created successfully!', 'success');
     } catch (e) {
       form = { error: 'Username or email are in use' };
-      toastStore.show(form.error, 'error'); // Use toastStore for error message
+      toastStore.show(form.error, 'error');
     }
   };
 </script>
@@ -99,14 +99,25 @@
       </div>
     </div>
 
+    <!-- Display tags -->
+    {#if tags.length > 0}
+      <div class="tags-section">
+        <div class="tag-container">
+          {#each tags as tag}
+            <span class="tag-pill">{tag}</span>
+          {/each}
+        </div>
+      </div>
+    {/if}
+
     <hr />
 
-    <!-- Sección de comentarios -->
+    <!-- Comments Section -->
     <div class="row">
       <CommentContainer {comments} errors={[]} on:commentForm={loadNewComment} />
     </div>
 
-    <!-- Botón para cargar más comentarios -->
+    <!-- Load more comments button -->
     {#if currentPage <= totalPages}
       <div style="display: flex; justify-content: center;">
         <button class="btn btn-primary" on:click={loadComments} disabled={loading}>
@@ -120,6 +131,42 @@
     {/if}
   </div>
 
-  <!-- The Toast component no longer needs to manage state manually -->
   <Toast />
 </div>
+
+<style>
+  /* Ocultar la sección si está vacía */
+  .tags-section {
+    margin-top: 15px;
+  }
+
+  /* Contenedor de tags disponibles y seleccionados */
+  .tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+
+  /* Estilo general para los tags */
+  .tag-pill {
+    background-color: #e0e0e0;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+  }
+
+  .tag-pill:hover {
+    background-color: #c7c7c7;
+    transform: scale(1.05);
+  }
+
+
+</style>

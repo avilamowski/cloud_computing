@@ -24,7 +24,7 @@ rds = {
   db_port     = 5432
 }
 
-dockerized_lambda_names = ["get_publications", "get_comments", "create_publication", "create_comment", "init_db", "create_user"]
+dockerized_lambda_names = ["get_publications", "get_comments", "create_publication", "create_comment", "init_db", "create_user", "get_tags"]
 
 zipped_lambdas = [
   "upload_image"
@@ -39,6 +39,13 @@ api_endpoints = [
     authorization_scopes  = []
   },
 
+  {
+    name                  = "get_tags"
+    method                = "GET"
+    path                  = "/get_tags"
+    require_authorization = false
+    authorization_scopes  = []
+  },
   {
     name                  = "get_comments"
     method                = "GET"
@@ -78,4 +85,6 @@ api_endpoints = [
     require_authorization = false
     authorization_scopes  = []
   }
+
+
 ]

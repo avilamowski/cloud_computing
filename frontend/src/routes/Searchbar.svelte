@@ -1,10 +1,26 @@
 <script>
-  export let href;
+  import { goto } from '$app/navigation';
+  
+  export let searchSelectedTags = [];
   export let searchTerm = '';
 
   const handleSearch = () => {
-    window.location.href = href(searchTerm);
-  };
+  const searchParams = new URLSearchParams();
+
+  // Agrega el término de búsqueda
+  if (searchTerm && searchTerm.trim() !== '') {
+    searchParams.set('search', searchTerm);
+  }
+
+  // Mantiene los tags seleccionados si existen
+  if (searchSelectedTags.length > 0) {
+    searchParams.set('tags', searchSelectedTags.join(','));
+  }
+
+  const newURL = `/?${searchParams.toString()}`;
+  goto(newURL, { replaceState: true });
+};
+
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
