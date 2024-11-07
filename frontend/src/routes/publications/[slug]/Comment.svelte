@@ -1,22 +1,20 @@
 <script>
 	import * as api from '$lib/api';
-
+	import { createEventDispatcher } from 'svelte';
+	import { onMount } from "svelte";
 	export let comment;
 
-	let isAdmin = api.isAdmin();
+	const dispatch = createEventDispatcher();
+	let isAdmin = false;
 	const deleteComment = async (e) => {
-		const comment_body = {
-			comment_id: comment.comment_id
-		};
-
-		try {
-		const response = await api.post(`delete_comment`, comment_body);
-
-		} catch (e) {
-			form = { error: 'Failed deleting comment' };
-			toastStore.show(form.error, 'error');
-		}
+		dispatch('commentDelete', {
+			comment: {comment_id: comment.comment_id}
+		});
+		e.target.reset();
 	};
+	onMount(async () => {
+		isAdmin = await api.isAdmin();
+	});
 </script>
 
 <div class="card">

@@ -57,8 +57,8 @@ export function put(path, data) {
 
 export async function isAdmin() {
   const { tokens } = await fetchAuthSession();
-  console.log(tokens);
-  if ("cognito:groups" in tokens.accessToken.payload) {
+  if (tokens && ("cognito:groups" in tokens?.accessToken?.payload ?? {})) {
+    console.log(tokens.accessToken.payload["cognito:groups"]);
     return tokens.accessToken.payload["cognito:groups"].includes("admin-group");
   }
   return false;

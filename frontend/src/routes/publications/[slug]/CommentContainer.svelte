@@ -19,7 +19,7 @@
 		</p>
 	{/if}
 	{#each comments as comment (comment.comment_id)}
-		<Comment {comment} />
+		<Comment {comment} on:commentDelete/>
 	{/each}
 	
 </div>

@@ -12,10 +12,6 @@
 			}
 		});
 		e.target.reset();
-
-		setTimeout(() => {
-			window.location.reload();
-		}, 500);
 	};
 </script>
 

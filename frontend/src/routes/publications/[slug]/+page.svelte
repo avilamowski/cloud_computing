@@ -6,6 +6,7 @@
   import * as api from "$lib/api";
   import Toast from "../../Toast.svelte";
   import { toastStore } from "../../store";
+  import { fetchUserAttributes } from "aws-amplify/auth";
 
   let data;
   let form;
@@ -15,7 +16,7 @@
   let currentPage = 1; 
   let totalPages = 1;  
   let loading = false; 
-  let isAdmin = api.isAdmin();
+  let isAdmin = false;
 
   $: p = +($page.url.searchParams.get("page") ?? "1");
   $: title = publication?.title || "Loading";
@@ -23,6 +24,7 @@
 
   onMount(async () => {
     await fetchData();
+    isAdmin = await api.isAdmin();
   });
 
   async function fetchData() {
@@ -50,6 +52,7 @@
     );
 
     comments = [...comments, ...com];
+    console.log("Comments", comments)
 
     totalPages = total_pages;
     currentPage += 1;
@@ -61,10 +64,10 @@
     const publicationId = $page.params.slug;
     const comment = {
       ...e.detail.comment,
-      user: {
-        username: e.detail.comment.username,
-        email: e.detail.comment.email,
-      },
+      // user: {
+      //   username: e.detail.comment.username,
+      //   email: e.detail.comment.email,
+      // },
       publication_id: publicationId,
       created_at: new Date().toISOString(),
     };
@@ -72,13 +75,16 @@
     try {
       const response = await api.post(`create_comment`, comment);
       comment.comment_id = response.comment_id;
+      const {email, preferred_username: username} = await fetchUserAttributes();
+      comment.user = { username, email };
 
       form = { success: "Comment was created successfully" };
       comments = [comment, ...comments];
 
       toastStore.show("Comment created successfully!", "success");
     } catch (e) {
-      form = { error: "Username or email are in use" };
+      console.log(e);
+      form = { error: "An error ocurred" };
       toastStore.show(form.error, "error");
     }
   };
@@ -96,6 +102,18 @@
       toastStore.show(form.error, 'error');
     }
   };
+
+  const deleteComment = async (e) => {
+    const comment_body = e.detail.comment;
+		try {
+			const response = await api.post(`delete_comment`, comment_body);
+      comments = comments.filter((c) => c.comment_id !== comment_body.comment_id);
+
+		} catch (e) {
+			form = { error: 'Failed deleting comment' };
+			toastStore.show(form.error, 'error');
+		}
+  }
 </script>
 
 <svelte:head>
@@ -104,7 +122,7 @@
 
 <div class="article-page">
   <div class="banner">
-    <div class="container">
+    <div class="container publication-title">
       <h1>{title}</h1>
       {#if isAdmin}
           <button class="ion-trash-a" on:click={deletePublication}/>
@@ -137,6 +155,7 @@
         {comments}
         errors={[]}
         on:commentForm={loadNewComment}
+        on:commentDelete={deleteComment}
       />
     </div>
 
@@ -190,5 +209,11 @@
     transition:
       background-color 0.3s,
       transform 0.1s;
+  }
+
+  .publication-title{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
   }
 </style>
