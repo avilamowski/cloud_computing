@@ -44,7 +44,7 @@ class Publication(Base):
     created_at = Column(DateTime, default=datetime.datetime.now, nullable=False)
 
     user = relationship("User", back_populates="publications")
-    comments = relationship("Comment", back_populates="publication")
+    comments = relationship("Comment", back_populates="publication", cascade="all, delete")
     tags = relationship("Tag", secondary=publication_tag_table, back_populates="publications")
 
     def to_dict(self):

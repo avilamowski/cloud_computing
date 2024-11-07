@@ -89,7 +89,7 @@
       publication_id: publicationId
     };
     try {
-      const response = await api.del(`delete_publication`, publication);
+      const response = await api.post(`delete_publication`, publication);
       window.location.href = '/';      
     } catch (e) {
       form = { error: 'Failed deleting publication' };

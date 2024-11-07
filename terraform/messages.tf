@@ -49,3 +49,11 @@ resource "aws_lambda_event_source_mapping" "sqs_trigger" {
   batch_size       = 10
   enabled          = true
 }
+
+resource "aws_sns_topic_subscription" "mail" {
+  for_each   = var.users
+  topic_arn  = aws_sns_topic.spam_topic.arn
+  protocol   = "email"
+  endpoint   = each.value.email
+  depends_on = [aws_cognito_user.main]
+}

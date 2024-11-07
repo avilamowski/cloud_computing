@@ -22,8 +22,11 @@ def lambda_handler(event, context):
     Tag.__table__.create(session.get_bind(), checkfirst=True)
     publication_tag_table.create(session.get_bind(), checkfirst=True)
 
-    # Usuarios realistas de Ingeniería Informática en ITBA
     users = [
+        # Admins! Required
+        {"user_id": UUID('550e8400-e29b-41d4-a716-44665544000a'), "username": 'joliu-admin', "email": 'joliu+1@itba.edu.ar'},
+        {"user_id": UUID('550e8400-e29b-41d4-a716-44665544000b'), "username": 'dwischnevsky-admin', "email": 'dwischnevsky+1@itba.edu.ar'},
+        #
         {
             "user_id": UUID("550e8400-e29b-41d4-a716-446655440000"),
             "username": "Agustina",
@@ -74,7 +77,6 @@ def lambda_handler(event, context):
             "username": "Javier",
             "email": "javier.torres@itba.edu.ar",
         },
-        {"user_id": UUID('550e8400-e29b-41d4-a716-446655440002'), "username": 'joliu-admin', "email": 'joliu+1@itba.edu.ar'}
     ]
     session.bulk_insert_mappings(User, users)
 

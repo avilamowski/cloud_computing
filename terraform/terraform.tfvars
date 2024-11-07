@@ -92,7 +92,7 @@ api_endpoints = [
 
   {
     name                  = "delete_publication"
-    method                = "DELETE"
+    method                = "POST"
     path                  = "/delete_publication"
     require_authorization = true
     authorization_scopes  = []
@@ -100,7 +100,7 @@ api_endpoints = [
 
   {
     name                  = "delete_comment"
-    method                = "DELETE"
+    method                = "POST"
     path                  = "/delete_comment"
     require_authorization = true
     authorization_scopes  = []
@@ -110,8 +110,14 @@ api_endpoints = [
 users = {
   "joliu-admin" : {
     username = "joliu-admin"
-    password = "Admin1234"
+    password = "Admin1234!"
     email    = "joliu+1@itba.edu.ar"
+    is_admin = true
+  }
+  "dwischnevsky-admin" : {
+    username = "david-admin"
+    password = "Admin1234!"
+    email    = "dwischnevsky+1@itba.edu.ar"
     is_admin = true
   }
 }

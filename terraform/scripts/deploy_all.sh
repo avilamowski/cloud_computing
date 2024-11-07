@@ -9,4 +9,6 @@ aws ecr get-login-password --region us-east-1 | docker login --username AWS --pa
 ./deploy.sh init_db $1 &
 ./deploy.sh create_user $1 &
 ./deploy.sh spam_detector $1 &
+./deploy.sh delete_comment $1 &
+./deploy.sh delete_publication $1 &
 wait

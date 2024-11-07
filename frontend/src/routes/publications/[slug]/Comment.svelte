@@ -1,5 +1,4 @@
 <script>
-	import { enhance } from '$app/forms';
 	import * as api from '$lib/api';
 
 	export let comment;
@@ -7,11 +6,11 @@
 	let isAdmin = api.isAdmin();
 	const deleteComment = async (e) => {
 		const comment_body = {
-			comment_id: comment.id
+			comment_id: comment.comment_id
 		};
 
 		try {
-		const response = await api.del(`delete_comment`, comment_body);
+		const response = await api.post(`delete_comment`, comment_body);
 
 		} catch (e) {
 			form = { error: 'Failed deleting comment' };

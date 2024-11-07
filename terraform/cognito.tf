@@ -79,8 +79,14 @@ resource "aws_cognito_user" "main" {
   user_pool_id = aws_cognito_user_pool.main.id
   username     = each.value.email
   password     = each.value.password
+
   attributes = {
+    email              = each.value.email
     preferred_username = each.value.username
+  }
+
+  lifecycle {
+    prevent_destroy = true
   }
 }
 
@@ -88,6 +94,6 @@ resource "aws_cognito_user_in_group" "admin" {
   for_each     = { for username, user in var.users : username => user if user.is_admin }
   user_pool_id = aws_cognito_user_pool.main.id
   group_name   = aws_cognito_user_group.admin.name
-  username     = each.value.username
+  username     = each.value.email
   depends_on   = [aws_cognito_user.main]
 }
