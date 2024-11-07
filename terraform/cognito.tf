@@ -77,10 +77,10 @@ resource "aws_cognito_user_group" "admin" {
 resource "aws_cognito_user" "main" {
   for_each     = var.users
   user_pool_id = aws_cognito_user_pool.main.id
-  username     = each.value.username
+  username     = each.value.email
   password     = each.value.password
   attributes = {
-    email = each.value.email
+    preferred_username = each.value.username
   }
 }
 

@@ -12,9 +12,10 @@
   let publication = null;
   let tags = []; // New variable to store tags
   let comments = [];
-  let currentPage = 1;
-  let totalPages = 1;
-  let loading = false;
+  let currentPage = 1; 
+  let totalPages = 1;  
+  let loading = false; 
+  let isAdmin = api.isAdmin();
 
   $: p = +($page.url.searchParams.get("page") ?? "1");
   $: title = publication?.title || "Loading";
@@ -81,6 +82,20 @@
       toastStore.show(form.error, "error");
     }
   };
+
+  const deletePublication = async (e) => {
+    const publicationId = $page.params.slug;
+    const publication = {
+      publication_id: publicationId
+    };
+    try {
+      const response = await api.del(`delete_publication`, publication);
+      window.location.href = '/';      
+    } catch (e) {
+      form = { error: 'Failed deleting publication' };
+      toastStore.show(form.error, 'error');
+    }
+  };
 </script>
 
 <svelte:head>
@@ -91,6 +106,10 @@
   <div class="banner">
     <div class="container">
       <h1>{title}</h1>
+      {#if isAdmin}
+          <button class="ion-trash-a" on:click={deletePublication}/>
+      {/if}
+    <hr />
     </div>
   </div>
 
@@ -111,8 +130,6 @@
         </div>
       </div>
     {/if}
-
-    <hr />
 
     <!-- Comments Section -->
     <div class="row">

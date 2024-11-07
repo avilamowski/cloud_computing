@@ -1,7 +1,23 @@
 <script>
 	import { enhance } from '$app/forms';
+	import * as api from '$lib/api';
 
 	export let comment;
+
+	let isAdmin = api.isAdmin();
+	const deleteComment = async (e) => {
+		const comment_body = {
+			comment_id: comment.id
+		};
+
+		try {
+		const response = await api.del(`delete_comment`, comment_body);
+
+		} catch (e) {
+			form = { error: 'Failed deleting comment' };
+			toastStore.show(form.error, 'error');
+		}
+	};
 </script>
 
 <div class="card">
@@ -19,12 +35,10 @@
 		<!-- </a> -->
 
 		<span class="date-posted">{new Date(comment.created_at).toDateString()}</span>
-
-		<!-- {#if user && comment.author.username === user.username}
-			<form use:enhance method="POST" action="?/deleteComment&id={comment.id}" class="mod-options">
-				<button class="ion-trash-a" aria-label="Delete comment" />
-			</form>
-		{/if} -->
+		
+		{#if isAdmin}
+			<button class="ion-trash-a" aria-label="Delete comment" on:click={deleteComment}/>
+		{/if}
 	</div>
 </div>
 

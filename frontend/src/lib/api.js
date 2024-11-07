@@ -1,6 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { PUBLIC_BASE_PATH } from '$env/static/public';
 import { isLoading } from '../routes/store';
+import { fetchAuthSession } from "aws-amplify/auth";
 
 // const base = 'https://api.realworld.io/api';
 // const base = 'https://0lhje3xjl2.execute-api.us-east-1.amazonaws.com/default/';
@@ -51,4 +52,14 @@ export function post(path, data) {
 
 export function put(path, data) {
 	return send({ method: 'PUT', path, data});
+}
+
+
+export async function isAdmin() {
+  const { tokens } = await fetchAuthSession();
+  console.log(tokens);
+  if ("cognito:groups" in tokens.accessToken.payload) {
+    return tokens.accessToken.payload["cognito:groups"].includes("admin-group");
+  }
+  return false;
 }
