@@ -28,7 +28,7 @@ rds = {
   db_port     = 5432
 }
 
-dockerized_lambda_names = ["get_publications", "get_comments", "create_publication", "create_comment", "init_db", "create_user", "get_tags", "spam_detector"]
+dockerized_lambda_names = ["get_publications", "get_comments", "create_publication", "create_comment", "init_db", "create_user", "get_tags", "spam_detector", "delete_publication", "delete_comment"]
 
 zipped_lambdas = [
   "upload_image"
@@ -88,7 +88,30 @@ api_endpoints = [
     path                  = "/create_user"
     require_authorization = false
     authorization_scopes  = []
+  },
+
+  {
+    name                  = "delete_publication"
+    method                = "DELETE"
+    path                  = "/delete_publication"
+    require_authorization = true
+    authorization_scopes  = []
+  },
+
+  {
+    name                  = "delete_comment"
+    method                = "DELETE"
+    path                  = "/delete_comment"
+    require_authorization = true
+    authorization_scopes  = []
   }
-
-
 ]
+
+users = {
+  "joliu-admin" : {
+    username = "joliu-admin"
+    password = "Admin1234"
+    email    = "joliu+1@itba.edu.ar"
+    is_admin = true
+  }
+}

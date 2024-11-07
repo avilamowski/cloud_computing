@@ -65,3 +65,29 @@ resource "terraform_data" "cognito_base_url" {
     data.aws_region.current.name
   ]
 }
+
+resource "aws_cognito_user_group" "admin" {
+  name         = "admin-group"
+  user_pool_id = aws_cognito_user_pool.main.id
+  description  = "Admin group"
+  precedence   = 1
+  role_arn     = data.aws_iam_role.lab_role
+}
+
+resource "aws_cognito_user" "main" {
+  for_each     = var.users
+  user_pool_id = aws_cognito_user_pool.main.id
+  username     = each.value.username
+  password     = each.value.password
+  attributes = {
+    email = each.value.email
+  }
+}
+
+resource "aws_cognito_user_in_group" "admin" {
+  for_each     = { for username, user in var.users : username => user if user.is_admin }
+  user_pool_id = aws_cognito_user_pool.main.id
+  group_name   = aws_cognito_user_group.admin.name
+  username     = each.value.username
+  depends_on   = [aws_cognito_user.main]
+}

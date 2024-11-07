@@ -40,3 +40,12 @@ variable "api_endpoints" {
     authorization_scopes  = list(string)
   }))
 }
+
+variable "users" {
+  type = map(object({
+    username = string
+    password = string
+    email    = string
+    is_admin = bool
+  }))
+}

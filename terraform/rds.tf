@@ -45,7 +45,7 @@ module "rds_proxy" {
   db_instance_identifier = aws_db_instance.main.identifier
 }
 resource "aws_secretsmanager_secret" "db_credentials" {
-  name        = "db_credentials9"
+  name        = "db_credentials14"
   description = "RDS database credentials"
 }
 
