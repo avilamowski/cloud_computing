@@ -13,9 +13,9 @@
   let publication = null;
   let tags = []; // New variable to store tags
   let comments = [];
-  let currentPage = 1; 
-  let totalPages = 1;  
-  let loading = false; 
+  let currentPage = 1;
+  let totalPages = 1;
+  let loading = false;
   let isAdmin = false;
 
   $: p = +($page.url.searchParams.get("page") ?? "1");
@@ -52,7 +52,7 @@
     );
 
     comments = [...comments, ...com];
-    console.log("Comments", comments)
+    console.log("Comments", comments);
 
     totalPages = total_pages;
     currentPage += 1;
@@ -75,7 +75,8 @@
     try {
       const response = await api.post(`create_comment`, comment);
       comment.comment_id = response.comment_id;
-      const {email, preferred_username: username} = await fetchUserAttributes();
+      const { email, preferred_username: username } =
+        await fetchUserAttributes();
       comment.user = { username, email };
 
       form = { success: "Comment was created successfully" };
@@ -92,28 +93,29 @@
   const deletePublication = async (e) => {
     const publicationId = $page.params.slug;
     const publication = {
-      publication_id: publicationId
+      publication_id: publicationId,
     };
     try {
       const response = await api.post(`delete_publication`, publication);
-      window.location.href = '/';      
+      window.location.href = "/";
     } catch (e) {
-      form = { error: 'Failed deleting publication' };
-      toastStore.show(form.error, 'error');
+      form = { error: "Failed deleting publication" };
+      toastStore.show(form.error, "error");
     }
   };
 
   const deleteComment = async (e) => {
     const comment_body = e.detail.comment;
-		try {
-			const response = await api.post(`delete_comment`, comment_body);
-      comments = comments.filter((c) => c.comment_id !== comment_body.comment_id);
-
-		} catch (e) {
-			form = { error: 'Failed deleting comment' };
-			toastStore.show(form.error, 'error');
-		}
-  }
+    try {
+      const response = await api.post(`delete_comment`, comment_body);
+      comments = comments.filter(
+        (c) => c.comment_id !== comment_body.comment_id
+      );
+    } catch (e) {
+      form = { error: "Failed deleting comment" };
+      toastStore.show(form.error, "error");
+    }
+  };
 </script>
 
 <svelte:head>
@@ -125,9 +127,11 @@
     <div class="container publication-title">
       <h1>{title}</h1>
       {#if isAdmin}
-          <button class="ion-trash-a" on:click={deletePublication}/>
+        <button class="trash-icon" on:click={deletePublication}>
+          <i class="ion-trash-a"></i>
+        </button>
       {/if}
-    <hr />
+      <hr />
     </div>
   </div>
 
@@ -211,9 +215,25 @@
       transform 0.1s;
   }
 
-  .publication-title{
+  .publication-title {
     display: flex;
-    flex-direction: row;
+    align-items: center;
     justify-content: space-between;
+    position: relative;
+  }
+
+  .trash-icon {
+    font-size: 1.5em;
+    background: none;
+    border: none;
+    color: #f9f9f9;
+    cursor: pointer;
+    transition: color 0.3s;
+    position: absolute;
+    right: 0;
+  }
+
+  .trash-icon:hover {
+    color: #ff0000; /* Cambia el color al pasar el cursor */
   }
 </style>
