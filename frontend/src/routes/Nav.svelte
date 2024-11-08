@@ -7,8 +7,8 @@
 	onMount(async () => {
 		const session = await fetchAuthSession();
 		token.set(session?.tokens?.idToken);
-		console.log("Cambiando session en nav")
-		token.subscribe(value => console.log("cambio:" + value));
+		// console.log("Cambiando session en nav")
+		// token.subscribe(value => console.log("cambio:" + value));
 	});
 
 	const logout = () => {

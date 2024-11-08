@@ -1,11 +1,25 @@
 <script>
+	import { createEventDispatcher, onMount } from 'svelte';
+  import * as api from "$lib/api";
+
   export let publication;
+  let isAdmin = false;
 
   function getFirstChars(content, count) {
     content = content.replace(/!\[.*\]\(.*\)/g, ''); // Remove markdown images
     if (content.length <= count) return content;
     return content.slice(0, count) + '...'; // Truncate text and add ellipsis
   }
+
+  onMount(async () => {
+    isAdmin = await api.isAdmin();
+  });
+
+	const dispatch = createEventDispatcher();
+
+	const deletePublication = () => {
+		dispatch('deletePublication', publication.publication_id);
+	};
 </script>
 
 <div class="article-preview">
@@ -14,6 +28,12 @@
       {publication.user.username}
       <span class="date">{new Date(publication.created_at).toDateString()}</span>
     </div>
+
+    {#if isAdmin}
+      <button class="trash-icon" on:click={deletePublication}>
+        <i class="ion-trash-a"></i>
+      </button>
+    {/if}
   </div>
 
   <a href="/publications/{publication?.publication_id}" class="preview-link">
@@ -83,6 +103,21 @@
     color: #333;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.1s;
+  }
+
+  .trash-icon {
+    font-size: 1.5em;
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s;
+    position: absolute;
+    right: 0;
+  }
+
+  .trash-icon:hover {
+    color: #ff0000; /* Cambia el color al pasar el cursor */
   }
 
 </style>
