@@ -113,7 +113,7 @@
       const response = await api.post(`create_publication`, {
         title: data.get("title"),
         content: data.get("content"),
-        tags: selectedTags, // Envía los tags seleccionados
+        tags: selectedTags.map(t => t.name), // Envía los tags seleccionados
       });
       document.body.style.overflow = "";
       goto(`/publications/${response.publication_id}`);
@@ -274,6 +274,7 @@
               <!-- Contenedor de tags -->
               <div class="tag-container">
                 {#each filteredTags as tag}
+                {#if searchSelectedTags.includes(tag.name)}
                   <span
                     class="tag-pill {searchSelectedTags.includes(tag.name)
                       ? 'selected'
@@ -282,6 +283,19 @@
                   >
                     {tag.name}
                   </span>
+                {/if}
+                {/each}
+                {#each filteredTags as tag}
+                {#if !searchSelectedTags.includes(tag.name)}
+                  <span
+                    class="tag-pill {searchSelectedTags.includes(tag.name)
+                      ? 'selected'
+                      : ''} {tag.tag_type}"
+                    on:click={() => toggleSearchTags(tag.name)}
+                  >
+                    {tag.name}
+                  </span>
+                {/if}
                 {/each}
               </div>
             </div>
@@ -342,7 +356,7 @@
                       <div class="tag-container">
                         {#each filteredTags as tag}
                           <span
-                            class="tag-pill {searchSelectedTags.includes(
+                            class="tag-pill {selectedTags.includes(
                               tag.name
                             )
                               ? 'selected'
@@ -363,7 +377,7 @@
                       <div class="tag-container">
                         {#each selectedTags as tag}
                           <span
-                            class="tag-pill {searchSelectedTags.includes(
+                            class="tag-pill {selectedTags.includes(
                               tag.name
                             )
                               ? 'selected'
