@@ -35,7 +35,7 @@ def lambda_handler(event, context):
             "email": "dwischnevsky+1@itba.edu.ar",
         },
         {
-            "user_id": UUID("550e8400-e29b-41d4-a716-44665544000b"),
+            "user_id": UUID("550e8400-e29b-41d4-a716-44665544000c"),
             "username": "avilamowski-admin",
             "email": "avilamowski@itba.edu.ar",
         },
@@ -92,9 +92,6 @@ def lambda_handler(event, context):
         },
     ]
     session.bulk_insert_mappings(User, users)
-
-    # Etiquetas relacionadas con las materias específicas
-    from uuid import UUID
 
     tags = [
         {

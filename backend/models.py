@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Table, Enum
+from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Table, Enum, CheckConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 import datetime
@@ -78,10 +78,9 @@ class Tag(Base):
 
     tag_id = Column(String, primary_key=True)
     name = Column(String(50), nullable=False, unique=True)
-    tag_type = Column(
-        Enum("Teacher", "Career", "Subject", "Miscellaneous", name="tag_type_enum"),
-        nullable=False,
-    )
+    # string with check constraint to only allow the values "Teacher", "Career", "Subject", "Miscellaneous"
+    tag_type = Column(String(50), CheckConstraint("tag_type IN ('Teacher', 'Career', 'Subject', 'Miscellaneous')"), nullable=False)
+
 
     publications = relationship(
         "Publication", secondary=publication_tag_table, back_populates="tags"
