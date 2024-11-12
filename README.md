@@ -44,7 +44,9 @@ Las pruebas se realizaron en máquinas con Linux (Ubuntu) y MacOS.
 El proyecto puede tardar 20 minutos en completarse.
 Si llegara a fallar por algún motivo se recomienda volver a correr el paso 4.
 
-5. Luego de esperar un tiempo prudencial (5~10min), ejecutar el comando `aws lambda invoke --function-name init_db response.json --region us-east-1` para inicializar la base de datos. Se decidió no inicializar la base de datos dentro de terraform ya que esto no es infraestructura y trasciende el uso de terraform.
+5. Luego de esperar un tiempo prudencial (5~10min), ejecutar el comando 
+`aws lambda invoke --function-name init_db response.json --region us-east-1` 
+para inicializar la base de datos. Se decidió no inicializar la base de datos dentro de terraform ya que esto no es infraestructura y trasciende el uso de terraform.
 6. Utilizar la URL del frontend provista por el bucket con nombre prefijo `soul-pupils-spa`.
 
 

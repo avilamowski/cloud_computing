@@ -338,9 +338,14 @@
                       <h5>Available Tags</h5>
                       <div class="tag-container">
                         {#each filteredTags as tag}
-                          <span class="tag-pill" on:click={() => toggleTag(tag)}
-                            >{tag}</span
+                          <span
+                            class="tag-pill {searchSelectedTags.includes(tag)
+                              ? 'selected'
+                              : ''} {tag.tag_type}"
+                            on:click={() => toggleTag(tag)}
                           >
+                            {tag.name}
+                          </span>
                         {/each}
                       </div>
                     </div>
@@ -353,9 +358,13 @@
                       <div class="tag-container">
                         {#each selectedTags as tag}
                           <span
-                            class="tag-pill selected"
-                            on:click={() => toggleTag(tag)}>{tag}</span
+                            class="tag-pill {searchSelectedTags.includes(tag)
+                              ? 'selected'
+                              : ''} {tag.tag_type}"
+                            on:click={() => toggleTag(tag)}
                           >
+                            {tag.name}
+                          </span>
                         {/each}
                       </div>
                     </div>
@@ -459,6 +468,26 @@
     background-color: #388e3c;
   }
 
+  .tag-pill.Miscellaneous {
+    background-color: #ffa500; /* Naranja */
+    color: white;
+  }
+
+  .tag-pill.Teacher {
+    background-color: #800080; /* Violeta */
+    color: white;
+  }
+
+  .tag-pill.Career {
+    background-color: #ff69b4; /* Rosa */
+    color: white;
+  }
+
+  .tag-pill.Subject {
+    background-color: #1e90ff; /* Azul */
+    color: white;
+  }
+
   button {
     margin: 10px 0;
   }
@@ -534,4 +563,6 @@
     margin: 0;
     padding: 10px;
   }
+
+  /* Estilos para los tags según el tipo */
 </style>
