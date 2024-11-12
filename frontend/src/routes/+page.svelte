@@ -90,6 +90,7 @@
         `get_publications?page=${p}&search=${searchTerm}&tags=${tagsFromURL}`
       );
       const tagsResponse = await api.get(`get_tags`);
+      console.log(tagsResponse);
 
       data = {
         publications: publicationsResponse.publications,
@@ -147,7 +148,9 @@
   }
 
   $: filteredTags = availableTags.filter((tag) => {
-    const normalizedTag = tag.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const normalizedTag = tag.name
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
     const normalizedFilter = tagFilter
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
@@ -272,12 +275,12 @@
               <div class="tag-container">
                 {#each filteredTags as tag}
                   <span
-                    class="tag-pill {searchSelectedTags.includes(tag)
+                    class="tag-pill {searchSelectedTags.includes(tag.name)
                       ? 'selected'
-                      : ''}"
-                    on:click={() => toggleSearchTags(tag)}
+                      : ''} {tag.tag_type}"
+                    on:click={() => toggleSearchTags(tag.name)}
                   >
-                    {tag}
+                    {tag.name}
                   </span>
                 {/each}
               </div>
@@ -339,7 +342,9 @@
                       <div class="tag-container">
                         {#each filteredTags as tag}
                           <span
-                            class="tag-pill {searchSelectedTags.includes(tag)
+                            class="tag-pill {searchSelectedTags.includes(
+                              tag.name
+                            )
                               ? 'selected'
                               : ''} {tag.tag_type}"
                             on:click={() => toggleTag(tag)}
@@ -358,7 +363,9 @@
                       <div class="tag-container">
                         {#each selectedTags as tag}
                           <span
-                            class="tag-pill {searchSelectedTags.includes(tag)
+                            class="tag-pill {searchSelectedTags.includes(
+                              tag.name
+                            )
                               ? 'selected'
                               : ''} {tag.tag_type}"
                             on:click={() => toggleTag(tag)}
@@ -459,7 +466,7 @@
 
   /* Estilo para los tags seleccionados */
   .tag-pill.selected {
-    background-color: #4caf50;
+    background-color: #4caf50 !important;
     color: #fff;
     font-weight: bold;
   }

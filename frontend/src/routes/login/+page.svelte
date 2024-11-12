@@ -87,7 +87,7 @@
               placeholder="Password"
             />
             <!-- Requisitos de la contraseña -->
-            <ul class="password-requirements">
+            <!-- <ul class="password-requirements">
               <li class={passwordRequirements.length ? "valid" : ""}>
                 At least 8 characters
               </li>
@@ -103,7 +103,7 @@
               <li class={passwordRequirements.symbol ? "valid" : ""}>
                 At least one symbol (ie. !@#$%^&*)
               </li>
-            </ul>
+            </ul> -->
           </fieldset>
           <button class="btn btn-lg btn-primary pull-xs-right" type="submit"
             >Sign in</button
