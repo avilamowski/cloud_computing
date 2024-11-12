@@ -12,8 +12,9 @@ logger.setLevel(logging.INFO)
 s3_client = boto3.client('s3')
 sns_client = boto3.client('sns')
 
-BUCKET_NAME = os.environ.get('SPAM_BUCKET_NAME')
+SPAM_BUCKET_NAME = os.environ.get('SPAM_BUCKET_NAME')
 SPAM_TOPIC_ARN = os.environ.get('SPAM_TOPIC_ARN')
+SPA_BUCKET_URL = os.environ.get('SPA_BUCKET_URL')
 EN_FILE_KEY = 'en.txt'
 ES_FILE_KEY = 'es.txt'
 
@@ -29,14 +30,15 @@ def lambda_handler(event, context):
             item_id = message['id']
             item_type = message['type']
 
-            name, content = get_content_by_id(session, item_id, item_type)
+            publication, content = get_content_by_id(session, item_id, item_type)
             if not content:
                 logger.error(f'{item_type.capitalize()} with ID {item_id} not found')
                 continue
-
-            if pattern.search(content):
+            pattern_match = pattern.search(content)
+            if pattern_match:
+                expression = pattern_match.group()
                 logger.info(f'Possible spam detected in {item_type} with ID {item_id}')
-                notify_moderators(item_id, item_type, name)
+                notify_moderators(item_id, item_type, publication, expression)
 
         session.close()
     except Exception as e:
@@ -45,10 +47,10 @@ def lambda_handler(event, context):
         raise e
 
 def load_banned_words_from_s3():
-    logger.info(f"Cargando palabras prohibidas del bucket {BUCKET_NAME} archivos {EN_FILE_KEY} y {ES_FILE_KEY}")
+    logger.info(f"Cargando palabras prohibidas del bucket {SPAM_BUCKET_NAME} archivos {EN_FILE_KEY} y {ES_FILE_KEY}")
     try:
-        en_response = s3_client.get_object(Bucket=BUCKET_NAME, Key=EN_FILE_KEY)
-        es_response = s3_client.get_object(Bucket=BUCKET_NAME, Key=ES_FILE_KEY)
+        en_response = s3_client.get_object(Bucket=SPAM_BUCKET_NAME, Key=EN_FILE_KEY)
+        es_response = s3_client.get_object(Bucket=SPAM_BUCKET_NAME, Key=ES_FILE_KEY)
         logger.info('Palabras prohibidas leidas de S3')
 
         en_content = en_response['Body'].read().decode('utf-8')
@@ -66,22 +68,21 @@ def get_content_by_id(session, item_id, item_type):
     logger.info(f'Obteniendo contenido por ID... ({item_type} {item_id})')
     if item_type == 'comment':
         comment = session.query(Comment).filter_by(comment_id=item_id).first()
-        comment_publication_name = comment.publication.title if comment else None
+        comment_publication = comment.publication if comment else None
         comment_content = comment.content if comment else None
-        return comment_publication_name, comment_content
+        return comment_publication, comment_content
     elif item_type == 'publication':
         publication = session.query(Publication).filter_by(publication_id=item_id).first()
-        publication_name = publication.title if publication else None
         publication_content = publication.content if publication else None
-        return publication_name, publication_content
+        return publication, publication_content
     return None
 
-def notify_moderators(item_id, item_type, item_name):
+def notify_moderators(item_id, item_type, publication, expression):
     try:
         sns_client.publish(
             TopicArn=SPAM_TOPIC_ARN,
             Subject=f'Spam Alert in {item_type.capitalize()}',
-            Message=f'Potential spam detected {item_type} with ID {item_id}, name: {item_name}'
+            Message=f'Potential spam detected:\nFound expression {expression} in {item_type} with ID {item_id}\nPublication: {publication.title} \n{SPA_BUCKET_URL}/publications/{publication.publication_id}',
         )
         logger.info(f'Notification sent for {item_type} with ID {item_id}')
     except Exception as e:

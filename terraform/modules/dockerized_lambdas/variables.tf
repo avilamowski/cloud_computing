@@ -15,6 +15,7 @@ variable "lambda_env_vars" {
     SPAM_BUCKET_NAME = string
     SPAM_TOPIC_ARN   = string
     SQS_QUEUE_URL    = string
+    SPA_BUCKET_URL   = string
   })
 }
 

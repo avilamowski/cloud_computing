@@ -23,6 +23,7 @@ module "dockerized_lambdas" {
     SPAM_BUCKET_NAME = module.s3["spam-filter-files"].bucket_name
     SPAM_TOPIC_ARN   = aws_sns_topic.spam_topic.arn
     SQS_QUEUE_URL    = aws_sqs_queue.spam_filter_queue.url
+    SPA_BUCKET_URL   = module.s3["soul-pupils-spa"].frontend_endpoint
   }
   lambda_aws_account_id = data.aws_caller_identity.current.account_id
   lambda_region_name    = data.aws_region.current.name
