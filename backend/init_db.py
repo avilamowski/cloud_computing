@@ -24,8 +24,21 @@ def lambda_handler(event, context):
 
     users = [
         # Admins! Required
-        {"user_id": UUID('550e8400-e29b-41d4-a716-44665544000a'), "username": 'joliu-admin', "email": 'joliu+1@itba.edu.ar'},
-        {"user_id": UUID('550e8400-e29b-41d4-a716-44665544000b'), "username": 'dwischnevsky-admin', "email": 'dwischnevsky+1@itba.edu.ar'},
+        {
+            "user_id": UUID("550e8400-e29b-41d4-a716-44665544000a"),
+            "username": "joliu-admin",
+            "email": "joliu+1@itba.edu.ar",
+        },
+        {
+            "user_id": UUID("550e8400-e29b-41d4-a716-44665544000b"),
+            "username": "dwischnevsky-admin",
+            "email": "dwischnevsky+1@itba.edu.ar",
+        },
+        {
+            "user_id": UUID("550e8400-e29b-41d4-a716-44665544000c"),
+            "username": "avilamowski-admin",
+            "email": "avilamowski@itba.edu.ar",
+        },
         #
         {
             "user_id": UUID("550e8400-e29b-41d4-a716-446655440000"),
@@ -80,46 +93,96 @@ def lambda_handler(event, context):
     ]
     session.bulk_insert_mappings(User, users)
 
-    # Etiquetas relacionadas con las materias específicas
     tags = [
         {
             "tag_id": UUID("880e8400-e29b-41d4-a716-446655440000"),
             "name": "Sistemas Operativos",
+            "tag_type": "Subject",
         },
         {
             "tag_id": UUID("880e8400-e29b-41d4-a716-446655440001"),
             "name": "Cloud Computing",
+            "tag_type": "Subject",
         },
-        {"tag_id": UUID("880e8400-e29b-41d4-a716-446655440002"), "name": "Redes"},
+        {
+            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440002"),
+            "name": "Redes",
+            "tag_type": "Subject",
+        },
         {
             "tag_id": UUID("880e8400-e29b-41d4-a716-446655440003"),
             "name": "Programación Imperativa",
+            "tag_type": "Subject",
         },
         {
             "tag_id": UUID("880e8400-e29b-41d4-a716-446655440004"),
             "name": "Programación Orientada a Objetos",
+            "tag_type": "Subject",
         },
         {
             "tag_id": UUID("880e8400-e29b-41d4-a716-446655440005"),
             "name": "Programación Funcional",
+            "tag_type": "Subject",
         },
-        {"tag_id": UUID("880e8400-e29b-41d4-a716-446655440006"), "name": "EDA"},
+        {
+            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440006"),
+            "name": "EDA",
+            "tag_type": "Subject",
+        },
         {
             "tag_id": UUID("880e8400-e29b-41d4-a716-446655440007"),
             "name": "Lógica Computacional",
+            "tag_type": "Subject",
         },
         {
             "tag_id": UUID("880e8400-e29b-41d4-a716-446655440008"),
             "name": "Matemática Discreta",
+            "tag_type": "Subject",
         },
-        {"tag_id": UUID("880e8400-e29b-41d4-a716-446655440009"), "name": "Profesores"},
-        {"tag_id": UUID("880e8400-e29b-41d4-a716-446655440010"), "name": "Exámenes"},
-        {"tag_id": UUID("880e8400-e29b-41d4-a716-446655440011"), "name": "Apuntes"},
-        {"tag_id": UUID("880e8400-e29b-41d4-a716-446655440012"), "name": "Parciales"},
-        {"tag_id": UUID("880e8400-e29b-41d4-a716-446655440013"), "name": "Finales"},
+        {
+            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440009"),
+            "name": "Profesores",
+            "tag_type": "Teacher",
+        },
+        {
+            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440010"),
+            "name": "Exámenes",
+            "tag_type": "Miscellaneous",
+        },
+        {
+            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440011"),
+            "name": "Apuntes",
+            "tag_type": "Miscellaneous",
+        },
+        {
+            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440012"),
+            "name": "Parciales",
+            "tag_type": "Miscellaneous",
+        },
+        {
+            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440013"),
+            "name": "Finales",
+            "tag_type": "Miscellaneous",
+        },
         {
             "tag_id": UUID("880e8400-e29b-41d4-a716-446655440014"),
             "name": "Técnicas de Estudio",
+            "tag_type": "Miscellaneous",
+        },
+        {
+            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440015"),
+            "name": "Ing. Informática",
+            "tag_type": "Career",
+        },
+        {
+            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440016"),
+            "name": "Ing. Electrónica",
+            "tag_type": "Career",
+        },
+        {
+            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440017"),
+            "name": "Ing. Mecánica",
+            "tag_type": "Career",
         },
     ]
     session.bulk_insert_mappings(Tag, tags)
@@ -138,12 +201,12 @@ def lambda_handler(event, context):
         "Sistemas Operativos": [
             "Dudas sobre el TP de Sistemas Operativos",
             "Guía para entender concurrencia y paralelismo",
-            "Experiencias con el profesor González en SO",
+            "Experiencias con Agodio en SO",
         ],
         "Cloud Computing": [
             "Introducción a AWS y sus servicios",
             "Comparativa entre AWS, Azure y GCP",
-            "Cómo desplegar aplicaciones en la nube",
+            "El final de Cloud me da flashbacks a Inge II",
         ],
         "Redes": [
             "Preguntas sobre protocolos TCP/IP",
@@ -153,12 +216,13 @@ def lambda_handler(event, context):
         "Programación Imperativa": [
             "Buenas prácticas en C",
             "Manejo de memoria dinámica",
-            "Funciones recursivas y su eficiencia",
+            "Es esto pesimo estilo?",
+            "Programación defensiva",
         ],
         "Programación Orientada a Objetos": [
             "Patrones de diseño más utilizados",
             "Encapsulación y herencia en Java",
-            "Ejemplos prácticos de POO en Python",
+            "Ejemplos prácticos de POO en Ruby",
         ],
         "Programación Funcional": [
             "Introducción a Haskell",
@@ -170,30 +234,40 @@ def lambda_handler(event, context):
             "Análisis de complejidad de algoritmos",
             "Uso de grafos en problemas reales",
         ],
+        "PAW": [
+            "No duermo hace una semana y no entiendo nada",
+            "La impedancia objeto relacional y sus consecuencias en la vida cotidiana",
+            "¿Cómo hago para que mi página se vea bonita?",
+            "Ayuda con SMTP",
+            "Debo el final de hace un año y me acabo de enterar que cambio el servidor de Tomcat",
+        ],
         "Lógica Computacional": [
-            "Resolución de problemas con Prolog",
-            "Tabla de verdad y demostraciones lógicas",
-            "Aplicaciones de lógica en informática",
+            "¿Cuál es el cardinal del conjunto de los conjuntos que no se contienen a sí mismos?",
+            "Resolución de problemas de lógica de primer orden",
+            "Funciones RP",
+            "El halting problem explicado con gatitos",
         ],
         "Matemática Discreta": [
             "Principios de conteo y combinatoria",
-            "Teoría de números y criptografía",
-            "Relaciones y funciones discretas",
+            "Grafos k-conexos",
+            "Grafo bipartito",
         ],
         "Profesores": [
-            "Opiniones sobre la profesora Martínez en POO",
+            "Opiniones sobre un parcial de la época de Bermudez en POO",
             "Recomendaciones de docentes para Redes",
             "Horarios de consulta actualizados",
+            "Estoy esperando una respuesta de Gonzalo hace 3 semanas y me estoy muriendo",
         ],
         "Exámenes": [
             "Fechas de los parciales de este cuatrimestre",
             "¿Qué temas entran en el final de EDA?",
-            "Tips para aprobar Matemática Discreta",
+            "Tips para aprobar PAW en primera vuelta",
+            "Qué temas entran en el final de POD???",
         ],
         "Apuntes": [
-            "Compartiendo apuntes de Programación Funcional",
+            "Compartiendo apuntes de Lógica",
             "Resumen de Sistemas Operativos",
-            "Guía de estudio para Lógica Computacional",
+            "Guía de estudio para Arqui",
         ],
         "Parciales": [
             "Ejercicios de parciales anteriores de POO",
@@ -201,8 +275,8 @@ def lambda_handler(event, context):
             "Estrategias para el parcial de Programación Imperativa",
         ],
         "Finales": [
-            "Mi experiencia en el final de EDA",
-            "Preguntas frecuentes en el final de Redes",
+            "Mi experiencia en el final de Proba",
+            "Preguntas frecuentes en el final de Cripto",
             "Material recomendado para preparar el final de SO",
         ],
         "Técnicas de Estudio": [

@@ -90,6 +90,7 @@
         `get_publications?page=${p}&search=${searchTerm}&tags=${tagsFromURL}`
       );
       const tagsResponse = await api.get(`get_tags`);
+      console.log(tagsResponse);
 
       data = {
         publications: publicationsResponse.publications,
@@ -112,7 +113,7 @@
       const response = await api.post(`create_publication`, {
         title: data.get("title"),
         content: data.get("content"),
-        tags: selectedTags, // Envía los tags seleccionados
+        tags: selectedTags.map(t => t.name), // Envía los tags seleccionados
       });
       document.body.style.overflow = "";
       goto(`/publications/${response.publication_id}`);
@@ -147,7 +148,9 @@
   }
 
   $: filteredTags = availableTags.filter((tag) => {
-    const normalizedTag = tag.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const normalizedTag = tag.name
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
     const normalizedFilter = tagFilter
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
@@ -271,14 +274,28 @@
               <!-- Contenedor de tags -->
               <div class="tag-container">
                 {#each filteredTags as tag}
+                {#if searchSelectedTags.includes(tag.name)}
                   <span
-                    class="tag-pill {searchSelectedTags.includes(tag)
+                    class="tag-pill {searchSelectedTags.includes(tag.name)
                       ? 'selected'
-                      : ''}"
-                    on:click={() => toggleSearchTags(tag)}
+                      : ''} {tag.tag_type}"
+                    on:click={() => toggleSearchTags(tag.name)}
                   >
-                    {tag}
+                    {tag.name}
                   </span>
+                {/if}
+                {/each}
+                {#each filteredTags as tag}
+                {#if !searchSelectedTags.includes(tag.name)}
+                  <span
+                    class="tag-pill {searchSelectedTags.includes(tag.name)
+                      ? 'selected'
+                      : ''} {tag.tag_type}"
+                    on:click={() => toggleSearchTags(tag.name)}
+                  >
+                    {tag.name}
+                  </span>
+                {/if}
                 {/each}
               </div>
             </div>
@@ -338,9 +355,16 @@
                       <h5>Available Tags</h5>
                       <div class="tag-container">
                         {#each filteredTags as tag}
-                          <span class="tag-pill" on:click={() => toggleTag(tag)}
-                            >{tag}</span
+                          <span
+                            class="tag-pill {selectedTags.includes(
+                              tag.name
+                            )
+                              ? 'selected'
+                              : ''} {tag.tag_type}"
+                            on:click={() => toggleTag(tag)}
                           >
+                            {tag.name}
+                          </span>
                         {/each}
                       </div>
                     </div>
@@ -353,9 +377,15 @@
                       <div class="tag-container">
                         {#each selectedTags as tag}
                           <span
-                            class="tag-pill selected"
-                            on:click={() => toggleTag(tag)}>{tag}</span
+                            class="tag-pill {selectedTags.includes(
+                              tag.name
+                            )
+                              ? 'selected'
+                              : ''} {tag.tag_type}"
+                            on:click={() => toggleTag(tag)}
                           >
+                            {tag.name}
+                          </span>
                         {/each}
                       </div>
                     </div>
@@ -450,13 +480,33 @@
 
   /* Estilo para los tags seleccionados */
   .tag-pill.selected {
-    background-color: #4caf50;
+    background-color: #4caf50 !important;
     color: #fff;
     font-weight: bold;
   }
 
   .tag-pill.selected:hover {
     background-color: #388e3c;
+  }
+
+  .tag-pill.Miscellaneous {
+    background-color: #ffa500; /* Naranja */
+    color: white;
+  }
+
+  .tag-pill.Teacher {
+    background-color: #800080; /* Violeta */
+    color: white;
+  }
+
+  .tag-pill.Career {
+    background-color: #ff69b4; /* Rosa */
+    color: white;
+  }
+
+  .tag-pill.Subject {
+    background-color: #1e90ff; /* Azul */
+    color: white;
   }
 
   button {
@@ -534,4 +584,6 @@
     margin: 0;
     padding: 10px;
   }
+
+  /* Estilos para los tags según el tipo */
 </style>

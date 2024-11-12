@@ -120,4 +120,10 @@ users = {
     email    = "dwischnevsky+1@itba.edu.ar"
     is_admin = true
   }
+  "avilamowski-admin" : {
+    username = "abril-admin"
+    password = "Admin1234!"
+    email    = "avilamowski@itba.edu.ar"
+    is_admin = true
+  }
 }
