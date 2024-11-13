@@ -153,6 +153,7 @@
       </div>
     {/if}
 
+    <hr />
     <!-- Comments Section -->
     <div class="row">
       <CommentContainer
@@ -188,6 +189,7 @@
   /* Ocultar la sección si está vacía */
   .tags-section {
     margin-top: 15px;
+    margin-bottom: 15px;
   }
 
   /* Contenedor de tags disponibles y seleccionados */

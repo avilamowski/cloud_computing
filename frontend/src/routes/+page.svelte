@@ -113,7 +113,7 @@
       const response = await api.post(`create_publication`, {
         title: data.get("title"),
         content: data.get("content"),
-        tags: selectedTags.map(t => t.name), // Envía los tags seleccionados
+        tags: selectedTags.map((t) => t.name), // Envía los tags seleccionados
       });
       document.body.style.overflow = "";
       goto(`/publications/${response.publication_id}`);
@@ -164,6 +164,11 @@
   function clearTags() {
     selectedTags = [];
     tagFilter = "";
+  }
+
+  function clearSearchTags() {
+    searchSelectedTags = [];
+    updateURLWithTags();
   }
 
   function toggleSearchTags(tag) {
@@ -259,6 +264,7 @@
         <div class="tag-search-container">
           <div>
             <h5>Available Tags</h5>
+
             <!-- Input para buscar tags -->
             <input
               type="text"
@@ -274,31 +280,40 @@
               <!-- Contenedor de tags -->
               <div class="tag-container">
                 {#each filteredTags as tag}
-                {#if searchSelectedTags.includes(tag.name)}
-                  <span
-                    class="tag-pill {searchSelectedTags.includes(tag.name)
-                      ? 'selected'
-                      : ''} {tag.tag_type}"
-                    on:click={() => toggleSearchTags(tag.name)}
-                  >
-                    {tag.name}
-                  </span>
-                {/if}
+                  {#if searchSelectedTags.includes(tag.name)}
+                    <span
+                      class="tag-pill {searchSelectedTags.includes(tag.name)
+                        ? 'selected'
+                        : ''} {tag.tag_type}"
+                      on:click={() => toggleSearchTags(tag.name)}
+                    >
+                      {tag.name}
+                    </span>
+                  {/if}
                 {/each}
                 {#each filteredTags as tag}
-                {#if !searchSelectedTags.includes(tag.name)}
-                  <span
-                    class="tag-pill {searchSelectedTags.includes(tag.name)
-                      ? 'selected'
-                      : ''} {tag.tag_type}"
-                    on:click={() => toggleSearchTags(tag.name)}
-                  >
-                    {tag.name}
-                  </span>
-                {/if}
+                  {#if !searchSelectedTags.includes(tag.name)}
+                    <span
+                      class="tag-pill {searchSelectedTags.includes(tag.name)
+                        ? 'selected'
+                        : ''} {tag.tag_type}"
+                      on:click={() => toggleSearchTags(tag.name)}
+                    >
+                      {tag.name}
+                    </span>
+                  {/if}
                 {/each}
               </div>
             </div>
+          {/if}
+          {#if searchSelectedTags.length > 0}
+            <button
+              class="btn btn-secondary btn-clear-all"
+              type="button"
+              on:click={clearSearchTags}
+            >
+              Clear All
+            </button>
           {/if}
         </div>
 
@@ -353,14 +368,11 @@
                   {#if filteredTags.length > 0}
                     <div class="tags-section-scrollable">
                       <h5>Available Tags</h5>
+
                       <div class="tag-container">
                         {#each filteredTags as tag}
                           <span
-                            class="tag-pill {selectedTags.includes(
-                              tag.name
-                            )
-                              ? 'selected'
-                              : ''} {tag.tag_type}"
+                            class="tag-pill {tag.tag_type}"
                             on:click={() => toggleTag(tag)}
                           >
                             {tag.name}
@@ -377,11 +389,7 @@
                       <div class="tag-container">
                         {#each selectedTags as tag}
                           <span
-                            class="tag-pill {selectedTags.includes(
-                              tag.name
-                            )
-                              ? 'selected'
-                              : ''} {tag.tag_type}"
+                            class="tag-pill {tag.tag_type}"
                             on:click={() => toggleTag(tag)}
                           >
                             {tag.name}
@@ -583,6 +591,21 @@
   :global(.carta-theme__default .carta-container > *) {
     margin: 0;
     padding: 10px;
+  }
+
+  .btn-clear-all {
+    margin-top: 10px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    background-color: #d9534f; /* Rojo claro */
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-clear-all:hover {
+    background-color: #c9302c; /* Rojo más oscuro */
   }
 
   /* Estilos para los tags según el tipo */
