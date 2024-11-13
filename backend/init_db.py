@@ -25,68 +25,68 @@ def lambda_handler(event, context):
     users = [
         # Admins! Required
         {
-            "user_id": UUID("550e8400-e29b-41d4-a716-44665544000a"),
+            "user_id": uuid4(),
             "username": "joliu-admin",
             "email": "joliu+1@itba.edu.ar",
         },
         {
-            "user_id": UUID("550e8400-e29b-41d4-a716-44665544000b"),
+            "user_id": uuid4(),
             "username": "dwischnevsky-admin",
             "email": "dwischnevsky+1@itba.edu.ar",
         },
         {
-            "user_id": UUID("550e8400-e29b-41d4-a716-44665544000c"),
+            "user_id": uuid4(),
             "username": "avilamowski-admin",
             "email": "avilamowski@itba.edu.ar",
         },
         #
         {
-            "user_id": UUID("550e8400-e29b-41d4-a716-446655440000"),
+            "user_id": uuid4(),
             "username": "Agustina",
             "email": "agustina.perez@itba.edu.ar",
         },
         {
-            "user_id": UUID("550e8400-e29b-41d4-a716-446655440001"),
+            "user_id": uuid4(),
             "username": "Bruno",
             "email": "bruno.garcia@itba.edu.ar",
         },
         {
-            "user_id": UUID("550e8400-e29b-41d4-a716-446655440002"),
+            "user_id": uuid4(),
             "username": "Camila",
             "email": "camila.rodriguez@itba.edu.ar",
         },
         {
-            "user_id": UUID("550e8400-e29b-41d4-a716-446655440003"),
+            "user_id": uuid4(),
             "username": "Diego",
             "email": "diego.fernandez@itba.edu.ar",
         },
         {
-            "user_id": UUID("550e8400-e29b-41d4-a716-446655440004"),
+            "user_id": uuid4(),
             "username": "Elena",
             "email": "elena.gomez@itba.edu.ar",
         },
         {
-            "user_id": UUID("550e8400-e29b-41d4-a716-446655440005"),
+            "user_id": uuid4(),
             "username": "Federico",
             "email": "federico.lopez@itba.edu.ar",
         },
         {
-            "user_id": UUID("550e8400-e29b-41d4-a716-446655440006"),
+            "user_id": uuid4(),
             "username": "Gabriela",
             "email": "gabriela.martinez@itba.edu.ar",
         },
         {
-            "user_id": UUID("550e8400-e29b-41d4-a716-446655440007"),
+            "user_id": uuid4(),
             "username": "Hernán",
             "email": "hernan.sanchez@itba.edu.ar",
         },
         {
-            "user_id": UUID("550e8400-e29b-41d4-a716-446655440008"),
+            "user_id": uuid4(),
             "username": "Isabella",
             "email": "isabella.ramirez@itba.edu.ar",
         },
         {
-            "user_id": UUID("550e8400-e29b-41d4-a716-446655440009"),
+            "user_id": uuid4(),
             "username": "Javier",
             "email": "javier.torres@itba.edu.ar",
         },
@@ -95,92 +95,112 @@ def lambda_handler(event, context):
 
     tags = [
         {
-            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440000"),
+            "tag_id": uuid4(),
             "name": "Sistemas Operativos",
             "tag_type": "Subject",
         },
         {
-            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440001"),
+            "tag_id": uuid4(),
             "name": "Cloud Computing",
             "tag_type": "Subject",
         },
         {
-            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440002"),
+            "tag_id": uuid4(),
             "name": "Redes",
             "tag_type": "Subject",
         },
         {
-            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440003"),
+            "tag_id": uuid4(),
             "name": "Programación Imperativa",
             "tag_type": "Subject",
         },
         {
-            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440004"),
+            "tag_id": uuid4(),
             "name": "Programación Orientada a Objetos",
             "tag_type": "Subject",
         },
         {
-            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440005"),
+            "tag_id": uuid4(),
             "name": "Programación Funcional",
             "tag_type": "Subject",
         },
         {
-            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440006"),
+            "tag_id": uuid4(),
             "name": "EDA",
             "tag_type": "Subject",
         },
         {
-            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440007"),
+            "tag_id": uuid4(),
             "name": "Lógica Computacional",
             "tag_type": "Subject",
         },
         {
-            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440008"),
+            "tag_id": uuid4(),
             "name": "Matemática Discreta",
             "tag_type": "Subject",
         },
         {
-            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440009"),
-            "name": "Profesores",
+            "tag_id": uuid4(),
+            "name": "María Laura Noni",
             "tag_type": "Teacher",
         },
         {
-            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440010"),
+            "tag_id": uuid4(),
+            "name": "Marcelo Garberoglio",
+            "tag_type": "Teacher",
+        },
+        {
+            "tag_id": uuid4(),
+            "name": "Pablo E. Fidel Martinez Lopez",
+            "tag_type": "Teacher",
+        },
+        {
+            "tag_id": uuid4(),
+            "name": "Camila Borinsky",
+            "tag_type": "Teacher",
+        },
+        {
+            "tag_id": uuid4(),
+            "name": "Faustino Pannunzio",
+            "tag_type": "Teacher",
+        },
+        {
+            "tag_id": uuid4(),
             "name": "Exámenes",
             "tag_type": "Miscellaneous",
         },
         {
-            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440011"),
+            "tag_id": uuid4(),
             "name": "Apuntes",
             "tag_type": "Miscellaneous",
         },
         {
-            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440012"),
+            "tag_id": uuid4(),
             "name": "Parciales",
             "tag_type": "Miscellaneous",
         },
         {
-            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440013"),
+            "tag_id": uuid4(),
             "name": "Finales",
             "tag_type": "Miscellaneous",
         },
         {
-            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440014"),
+            "tag_id": uuid4(),
             "name": "Técnicas de Estudio",
             "tag_type": "Miscellaneous",
         },
         {
-            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440015"),
+            "tag_id": uuid4(),
             "name": "Ing. Informática",
             "tag_type": "Career",
         },
         {
-            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440016"),
+            "tag_id": uuid4(),
             "name": "Ing. Electrónica",
             "tag_type": "Career",
         },
         {
-            "tag_id": UUID("880e8400-e29b-41d4-a716-446655440017"),
+            "tag_id": uuid4(),
             "name": "Ing. Mecánica",
             "tag_type": "Career",
         },
